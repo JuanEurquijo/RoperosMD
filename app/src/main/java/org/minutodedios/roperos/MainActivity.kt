@@ -13,6 +13,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
+import com.google.firebase.auth.FirebaseAuth
 import org.minutodedios.roperos.navigation.RoperosNavigation
 import org.minutodedios.roperos.ui.theme.AppRoperosMDTheme
 

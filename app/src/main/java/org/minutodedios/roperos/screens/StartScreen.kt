@@ -15,6 +15,8 @@ import androidx.compose.ui.draw.scale
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
+import com.google.firebase.auth.FirebaseAuth
+import com.google.firebase.ktx.Firebase
 import kotlinx.coroutines.delay
 import org.minutodedios.roperos.R
 import org.minutodedios.roperos.navigation.RoperosScreens
@@ -35,6 +37,15 @@ fun StartScreen(navController: NavController){
       )
       delay(2000L)
       navController.navigate(RoperosScreens.LoginScreen.name)
+      /*if (FirebaseAuth.getInstance().currentUser?.email.isNullOrEmpty()){
+         navController.navigate(RoperosScreens.LoginScreen.name)
+      } else {
+         navController.navigate(RoperosScreens.StartScreen.name){
+            popUpTo(RoperosScreens.StartScreen.name){
+               inclusive = true
+            }
+         }
+      }*/
    }
    Surface(modifier = Modifier
       .padding(10.dp)
