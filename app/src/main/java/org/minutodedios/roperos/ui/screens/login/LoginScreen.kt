@@ -35,7 +35,6 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalSoftwareKeyboardController
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.TextStyle
@@ -43,18 +42,21 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.text.input.VisualTransformation
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import org.minutodedios.roperos.AuthViewModel
 import org.minutodedios.roperos.R
+import org.minutodedios.roperos.services.authentication.mock.MockAuthenticationService
+import org.minutodedios.roperos.ui.theme.ApplicationTheme
 
 @Composable
 fun LoginScreen(
-    authViewModel: AuthViewModel = viewModel()
+    authViewModel: AuthViewModel = viewModel(),
+    initialStateIsLogin: Boolean = true
 ) {
-
-    var mustShowLogin by remember { mutableStateOf(true) }
+    var mustShowLogin by remember { mutableStateOf(initialStateIsLogin) }
 
     Surface(
         modifier = Modifier
@@ -122,11 +124,27 @@ fun LoginScreen(
     }
 }
 
+@Preview
+@Composable
+fun SignInScreenPreview() {
+    ApplicationTheme {
+        LoginScreen(AuthViewModel(MockAuthenticationService()), initialStateIsLogin = true)
+    }
+}
+
+@Preview
+@Composable
+fun SignUpScreenPreview() {
+    ApplicationTheme {
+        LoginScreen(AuthViewModel(MockAuthenticationService()), initialStateIsLogin = false)
+    }
+}
+
 @OptIn(ExperimentalComposeUiApi::class)
 @Composable
 fun UserForm(
     isCreatingAccount: Boolean = false,
-    onDone: (String, String) -> Unit = { email, password -> }
+    onDone: (String, String) -> Unit
 ) {
     val email = rememberSaveable {
         mutableStateOf("")
@@ -218,7 +236,7 @@ fun PasswordInput(
         trailingIcon = {
             if (passwordState.value.isNotBlank()) {
                 PasswordVisibleIcon(passwordVisible)
-            } else null
+            }
         }
     )
 }

@@ -1,8 +1,12 @@
 package org.minutodedios.roperos.services.authentication
 
+/**
+ * Interfaz o wrapper del servicio de autenticación
+ */
 interface IAuthenticationService {
     /**
      * Registrar un nuevo usuario con su email y contraseña
+     * @param onResult Callback de resultado, recibe como parámetro el resultado booleano
      */
     fun register(email: String, password: String, onResult: (Boolean) -> Unit)
 
@@ -26,6 +30,7 @@ interface IAuthenticationService {
 
     /**
      * Eliminar un listener dado su identificador de listener
+     * @param listener Objeto identificador del listener
      */
     fun removeStateListener(listener: Any)
 
@@ -37,5 +42,5 @@ interface IAuthenticationService {
     /**
      * Getter para el usuario, puede ser null si no está autenticado
      */
-    val user: IAuthUser
+    val user: IAuthUser?
 }

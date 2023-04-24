@@ -7,10 +7,14 @@ import androidx.activity.viewModels
 import androidx.compose.runtime.Composable
 import dagger.hilt.android.AndroidEntryPoint
 import org.minutodedios.roperos.AuthViewModel
-import org.minutodedios.roperos.ui.screens.main.MainScreen
 import org.minutodedios.roperos.ui.screens.login.LoginScreen
+import org.minutodedios.roperos.ui.screens.main.MainScreen
 import org.minutodedios.roperos.ui.theme.ApplicationTheme
 
+/**
+ * Actividad principal que llamará a la vista principal de JetpackCompose
+ * Se encarga de proveer el ViewModel de autenticación a los composables
+ */
 @AndroidEntryPoint
 class MainActivity : ComponentActivity() {
 

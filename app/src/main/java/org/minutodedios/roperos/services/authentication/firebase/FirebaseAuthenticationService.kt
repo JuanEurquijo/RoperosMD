@@ -7,6 +7,9 @@ import com.google.firebase.ktx.Firebase
 import org.minutodedios.roperos.services.authentication.IAuthUser
 import org.minutodedios.roperos.services.authentication.IAuthenticationService
 
+/**
+ * Proveedor del servicio de autenticación de Firebase
+ */
 class FirebaseAuthenticationService(
     /**
      * Proveedor de autenticación de Firebase
@@ -26,15 +29,15 @@ class FirebaseAuthenticationService(
         auth.addAuthStateListener {
             _currentUser = if (it.currentUser != null) FirebaseAuthUser(
                 it.currentUser!!
-            ) else null;
+            ) else null
         }
     }
 
     override val authenticated: Boolean
-        get() = _currentUser != null;
+        get() = _currentUser != null
 
 
-    override val user: IAuthUser get() = _currentUser as IAuthUser
+    override val user: IAuthUser? get() = _currentUser
 
     override fun login(email: String, password: String, onResult: (Boolean) -> Unit) {
         auth.signInWithEmailAndPassword(email, password).addOnCompleteListener {
@@ -58,12 +61,12 @@ class FirebaseAuthenticationService(
             listener.invoke(
                 au.currentUser != null,
                 if (au.currentUser != null) FirebaseAuthUser(au.currentUser!!) else null
-            );
+            )
         }
 
         auth.addAuthStateListener(listenable)
 
-        return listenable;
+        return listenable
     }
 
     override fun removeStateListener(listener: Any) {

@@ -16,8 +16,8 @@ fun BottomNavigationBar(
     navController: NavHostController,
     navigationItems: List<INavigationRoute>
 ) {
-    BottomAppBar() {
-        NavigationBar() {
+    BottomAppBar {
+        NavigationBar {
             val currentRoute by navController.currentBackStackEntryAsState()
 
             navigationItems.forEach { screen ->
