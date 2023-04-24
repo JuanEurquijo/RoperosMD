@@ -22,7 +22,6 @@ import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.OutlinedTextField
-import androidx.compose.material3.Snackbar
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -47,14 +46,12 @@ import androidx.compose.ui.text.input.VisualTransformation
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewmodel.compose.viewModel
-import androidx.navigation.NavHostController
-import org.minutodedios.roperos.ApplicationViewModel
+import org.minutodedios.roperos.AuthViewModel
 import org.minutodedios.roperos.R
-import org.minutodedios.roperos.ui.navigation.RoperosScreens
 
 @Composable
 fun LoginScreen(
-    applicationViewModel: ApplicationViewModel = viewModel()
+    authViewModel: AuthViewModel = viewModel()
 ) {
 
     var mustShowLogin by remember { mutableStateOf(true) }
@@ -86,16 +83,16 @@ fun LoginScreen(
                 // TODO: Mostrar los errores
                 if (mustShowLogin) {
                     // Inicio de sesión
-                    applicationViewModel.authService.login(email, password) {
+                    authViewModel.authService.login(email, password) {
                         Log.d(
-                            applicationViewModel.authService::class.simpleName,
+                            authViewModel.authService::class.simpleName,
                             "[$it] Resultado de inicio de sesión con la cuenta: $email"
                         )
                     }
                 } else {
-                    applicationViewModel.authService.register(email, password) {
+                    authViewModel.authService.register(email, password) {
                         Log.d(
-                            applicationViewModel.authService::class.simpleName,
+                            authViewModel.authService::class.simpleName,
                             "[$it] Creación de la cuenta: $email"
                         )
                     }

@@ -6,7 +6,7 @@ import androidx.activity.compose.setContent
 import androidx.activity.viewModels
 import androidx.compose.runtime.Composable
 import dagger.hilt.android.AndroidEntryPoint
-import org.minutodedios.roperos.ApplicationViewModel
+import org.minutodedios.roperos.AuthViewModel
 import org.minutodedios.roperos.ui.navigation.RoperosNavigation
 import org.minutodedios.roperos.ui.screens.login.LoginScreen
 import org.minutodedios.roperos.ui.theme.ApplicationTheme
@@ -14,7 +14,7 @@ import org.minutodedios.roperos.ui.theme.ApplicationTheme
 @AndroidEntryPoint
 class MainActivity : ComponentActivity() {
 
-    private val applicationViewModel: ApplicationViewModel by viewModels()
+    private val authViewModel: AuthViewModel by viewModels()
 
     override fun onCreate(savedInstanceState: Bundle?) {
 
@@ -29,7 +29,7 @@ class MainActivity : ComponentActivity() {
 
     @Composable
     fun AuthenticatedComposable() {
-        if (applicationViewModel.authenticated) {
+        if (authViewModel.authenticated) {
             RoperosNavigation()
         } else {
             LoginScreen()

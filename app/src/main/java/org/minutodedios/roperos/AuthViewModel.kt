@@ -10,7 +10,7 @@ import org.minutodedios.roperos.services.authentication.IAuthenticationService
 import javax.inject.Inject
 
 @HiltViewModel
-class ApplicationViewModel @Inject constructor(
+class AuthViewModel @Inject constructor(
     val authService: IAuthenticationService
 ) : ViewModel() {
 

@@ -5,11 +5,9 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
-import org.minutodedios.roperos.ApplicationViewModel
-import org.minutodedios.roperos.ui.screens.start.StartScreen
+import org.minutodedios.roperos.AuthViewModel
 import org.minutodedios.roperos.ui.screens.home.HomeScreen
 import org.minutodedios.roperos.ui.screens.home.SettingsScreen
-import org.minutodedios.roperos.ui.screens.login.LoginScreen
 
 /**
  * Controlador de navegación de la aplicación
@@ -28,8 +26,8 @@ fun RoperosNavigation() {
         }
 
         composable(RoperosScreens.SettingScreen.name) {
-            val applicationViewModel: ApplicationViewModel = hiltViewModel()
-            SettingsScreen(applicationViewModel = applicationViewModel)
+            val applicationViewModel: AuthViewModel = hiltViewModel()
+            SettingsScreen(authViewModel = applicationViewModel)
         }
     }
 }
