@@ -1,4 +1,4 @@
-package org.minutodedios.roperos.ui.screens.home
+package org.minutodedios.roperos.ui.screens.main
 
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text

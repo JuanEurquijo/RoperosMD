@@ -1,6 +1,7 @@
 package org.minutodedios.roperos.services.authentication.firebase
 
 import com.google.firebase.auth.FirebaseAuth
+import com.google.firebase.auth.FirebaseAuth.AuthStateListener
 import com.google.firebase.auth.ktx.auth
 import com.google.firebase.ktx.Firebase
 import org.minutodedios.roperos.services.authentication.IAuthUser
@@ -30,14 +31,7 @@ class FirebaseAuthenticationService(
     }
 
     override val authenticated: Boolean
-        get() {
-            // Meter el FirebaseUser dentro de FirebaseAuthUser
-            _currentUser = if (auth.currentUser != null) FirebaseAuthUser(
-                auth.currentUser!!
-            ) else null
-            // Retorna True si el usuario no es null
-            return _currentUser != null;
-        }
+        get() = _currentUser != null;
 
 
     override val user: IAuthUser get() = _currentUser as IAuthUser
@@ -58,12 +52,21 @@ class FirebaseAuthenticationService(
         }
     }
 
-    override fun authStateListener(listener: (Boolean, IAuthUser?) -> Unit) {
-        auth.addAuthStateListener {
+    override fun authStateListener(listener: (Boolean, IAuthUser?) -> Unit): AuthStateListener {
+
+        val listenable = AuthStateListener { au ->
             listener.invoke(
-                it.currentUser != null,
-                if (it.currentUser != null) FirebaseAuthUser(it.currentUser!!) else null
+                au.currentUser != null,
+                if (au.currentUser != null) FirebaseAuthUser(au.currentUser!!) else null
             );
         }
+
+        auth.addAuthStateListener(listenable)
+
+        return listenable;
+    }
+
+    override fun removeStateListener(listener: Any) {
+        auth.removeAuthStateListener(listener as AuthStateListener)
     }
 }

@@ -7,7 +7,7 @@ import androidx.activity.viewModels
 import androidx.compose.runtime.Composable
 import dagger.hilt.android.AndroidEntryPoint
 import org.minutodedios.roperos.AuthViewModel
-import org.minutodedios.roperos.ui.navigation.RoperosNavigation
+import org.minutodedios.roperos.ui.screens.main.MainScreen
 import org.minutodedios.roperos.ui.screens.login.LoginScreen
 import org.minutodedios.roperos.ui.theme.ApplicationTheme
 
@@ -30,7 +30,7 @@ class MainActivity : ComponentActivity() {
     @Composable
     fun AuthenticatedComposable() {
         if (authViewModel.authenticated) {
-            RoperosNavigation()
+            MainScreen()
         } else {
             LoginScreen()
         }

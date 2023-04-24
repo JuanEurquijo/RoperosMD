@@ -6,10 +6,10 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 
 @Composable
-fun Home(){
+fun OperationsScreen(){
     Column {
-        Text(text = "Inicio",
-        style = MaterialTheme.typography.headlineMedium
-            )
+        Text(text = "Operaciones",
+            style = MaterialTheme.typography.headlineMedium
+        )
     }
 }

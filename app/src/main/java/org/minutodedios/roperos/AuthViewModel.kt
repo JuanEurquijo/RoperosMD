@@ -14,7 +14,7 @@ class AuthViewModel @Inject constructor(
     val authService: IAuthenticationService
 ) : ViewModel() {
 
-    var authenticated: Boolean by mutableStateOf(false)
+    var authenticated: Boolean by mutableStateOf(authService.authenticated)
         private set
 
     var currentUser: IAuthUser? by mutableStateOf(null)

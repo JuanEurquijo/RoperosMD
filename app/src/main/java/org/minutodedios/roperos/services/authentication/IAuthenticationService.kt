@@ -20,8 +20,14 @@ interface IAuthenticationService {
     /**
      * Agregar un callback listener para cuando cambie la autenticación
      * @param listener Recibe como parámetro el resultado booleano y el usuario
+     * @return Objeto identificador del listener
      */
-    fun authStateListener(listener: (Boolean, IAuthUser?) -> Unit)
+    fun authStateListener(listener: (Boolean, IAuthUser?) -> Unit): Any
+
+    /**
+     * Eliminar un listener dado su identificador de listener
+     */
+    fun removeStateListener(listener: Any)
 
     /**
      * Getter para saber si se está autenticado
