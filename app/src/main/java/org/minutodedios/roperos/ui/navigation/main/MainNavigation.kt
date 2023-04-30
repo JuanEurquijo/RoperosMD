@@ -10,7 +10,6 @@ import org.minutodedios.roperos.screens.home.CartScreen
 import org.minutodedios.roperos.screens.home.HomeScreen
 import org.minutodedios.roperos.screens.home.OperationsScreen
 import org.minutodedios.roperos.ui.navigation.main.MainNavigationRoutes
-import org.minutodedios.roperos.ui.screens.main.SettingsScreen
 
 /**
  * Controlador de navegación de la aplicación
@@ -22,19 +21,16 @@ fun MainNavigation(navController: NavHostController = rememberNavController()) {
         startDestination = MainNavigationRoutes.HomeScreenRoute.route
     ) {
         composable(MainNavigationRoutes.HomeScreenRoute.route) {
-            HomeScreen()
+            HomeScreen(authViewModel = hiltViewModel())
         }
 
         composable(MainNavigationRoutes.CartScreenRoute.route) {
-            CartScreen()
+            CartScreen(navController)
         }
 
         composable(MainNavigationRoutes.OperationsScreenRoute.route) {
             OperationsScreen()
         }
 
-        composable(MainNavigationRoutes.SettingsScreenRoute.route) {
-            SettingsScreen(authViewModel = hiltViewModel())
-        }
     }
 }

@@ -13,6 +13,5 @@ enum class MainNavigationRoutes(
 ) : INavigationRoute {
     HomeScreenRoute(R.drawable.icon_home, "Inicio", "homeScreen"),
     CartScreenRoute(R.drawable.icon_cart, "Carrito", "cartScreen"),
-    OperationsScreenRoute(R.drawable.icon_menu, "Operaciones", "operationsScreen"),
-    SettingsScreenRoute(R.drawable.icon_settings, "Ajustes", "settingsScreen")
+    OperationsScreenRoute(R.drawable.icon_menu, "Operaciones", "operationsScreen")
 }
