@@ -68,7 +68,7 @@ fun InventoryScreen(navController: NavHostController) {
             .padding(16.dp),
         horizontalAlignment = Alignment.Start
     ) {
-        IconButton(onClick = {navController.navigate(MainNavigationRoutes.HomeScreenRoute.route)}) {
+        IconButton(onClick = {navController.popBackStack()}) {
             Icon(imageVector = Icons.Filled.ArrowBack, contentDescription = "Icon Menu")
         }
     }

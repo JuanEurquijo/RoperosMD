@@ -11,6 +11,7 @@ import org.minutodedios.roperos.screens.home.HomeScreen
 import org.minutodedios.roperos.screens.home.OperationsScreen
 import org.minutodedios.roperos.ui.navigation.main.MainNavigationRoutes
 import org.minutodedios.roperos.ui.screens.main.ClothesEntryScreen
+import org.minutodedios.roperos.ui.screens.main.InventoryOptionsScreen
 import org.minutodedios.roperos.ui.screens.main.InventoryScreen
 
 /**
@@ -37,6 +38,11 @@ fun MainNavigation(navController: NavHostController = rememberNavController()) {
         composable("clothesEntryScreen") {
             ClothesEntryScreen(navController)
         }
+
+        composable("inventoryOptionsScreen") {
+            InventoryOptionsScreen(navController)
+        }
+
         composable("inventoryScreen") {
             InventoryScreen(navController)
         }

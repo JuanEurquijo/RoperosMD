@@ -141,7 +141,7 @@ fun HomeScreen(
                     animationSpec = tween(durationMillis = 300)
                 )
 
-                val route = listOf("","clothesEntryScreen","","inventoryScreen")
+                val route = listOf("","clothesEntryScreen","","inventoryOptionsScreen")
                 Box(
                     Modifier.fillMaxSize(), contentAlignment = Alignment.Center
                 ) {
