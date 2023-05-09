@@ -1,4 +1,4 @@
-package org.minutodedios.roperos.screens.home
+package org.minutodedios.roperos.ui.screens.main
 
 import android.annotation.SuppressLint
 import androidx.compose.foundation.Image
@@ -30,11 +30,8 @@ import androidx.compose.material3.ListItem
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.MutableState
-import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateListOf
 import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
-import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -51,7 +48,7 @@ import org.minutodedios.roperos.ui.navigation.main.MainNavigationRoutes
 @SuppressLint("UnrememberedMutableState")
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun CartScreen(
+fun ClothesEntryScreen(
     navController: NavHostController
 ) {
     data class ListItemData(
@@ -60,8 +57,6 @@ fun CartScreen(
 
     )
 
-    var subtotal by remember { mutableStateOf(1) }
-    var total by remember { mutableStateOf(1) }
     val listItems = mutableStateListOf(
         ListItemData("Camisas - Camisetas", mutableStateOf(1)),
         ListItemData("Chaquetas", mutableStateOf(1)),
@@ -90,7 +85,7 @@ fun CartScreen(
     ) {
         Spacer(modifier = Modifier.height(30.dp))
         Text(
-            text = "Carrito del Cliente",
+            text = "Ingreso de Prendas",
             style = TextStyle(
                 fontWeight = FontWeight.Bold,
             ), fontSize = 18.sp
@@ -109,9 +104,9 @@ fun CartScreen(
                         fontWeight = FontWeight.Bold,
                     ), fontSize = 16.sp
                 )
-                Spacer(modifier = Modifier.width(150.dp))
+                Spacer(modifier = Modifier.width(110.dp))
                 Text(
-                    text = "Valor",
+                    text = "Cantidad",
                     style = TextStyle(
                         fontWeight = FontWeight.Bold,
                     ), fontSize = 16.sp
@@ -139,34 +134,27 @@ fun CartScreen(
                             style = TextStyle(
                                 fontWeight = FontWeight.Light,
                             ), fontSize = 15.sp
-                        )},
-                        supportingText = {
-                            Row(
-                                verticalAlignment = Alignment.CenterVertically
-                            ) {
-                                IconButton(onClick = { item.value.value -= 1},
-                                    modifier = Modifier.size(15.dp)) {
-                                    Icon(imageVector = Icons.Filled.Remove, contentDescription = "Icon Remove")
-                                }
-                                Spacer(modifier = Modifier.width(10.dp))
-                                Text(text = item.value.value.toString(),
-                                    fontSize = 15.sp)
-                                Spacer(modifier = Modifier.width(10.dp))
-                                IconButton(
-                                    onClick = { item.value.value += 1 },
-                                    modifier = Modifier.size(15.dp)) {
-                                    Icon(
-                                        imageVector = Icons.Filled.Add,
-                                        contentDescription = "Icon Add")
-                                }
-                            }
+                        )
                         },
-                        trailingContent = { Text(
-                            text="$ "+subtotal.toString(),
-                            style = TextStyle(
-                                fontWeight = FontWeight.Bold,
-                            ), fontSize = 14.sp
-                        ) },
+                        trailingContent = {Row(
+                            verticalAlignment = Alignment.CenterVertically
+                        ) {
+                            IconButton(onClick = { item.value.value -= 1},
+                                modifier = Modifier.size(15.dp)) {
+                                Icon(imageVector = Icons.Filled.Remove, contentDescription = "Icon Remove")
+                            }
+                            Spacer(modifier = Modifier.width(10.dp))
+                            Text(text = item.value.value.toString(),
+                                fontSize = 15.sp)
+                            Spacer(modifier = Modifier.width(10.dp))
+                            IconButton(
+                                onClick = { item.value.value += 1 },
+                                modifier = Modifier.size(15.dp)) {
+                                Icon(
+                                    imageVector = Icons.Filled.Add,
+                                    contentDescription = "Icon Add")
+                            }
+                        }},
                         leadingContent = {
                             Row{
                                 Image(
@@ -182,34 +170,13 @@ fun CartScreen(
                 }
             }
         }
-        Row(
-            modifier = Modifier
-                .fillMaxWidth(),
-            verticalAlignment = Alignment.CenterVertically,
-            horizontalArrangement = Arrangement.Center,
-            content = {
-                Text(
-                    text = "Total",
-                    style = TextStyle(
-                        fontWeight = FontWeight.Bold,
-                    ), fontSize = 16.sp
-                )
-                Spacer(modifier = Modifier.width(150.dp))
-                Text(
-                    text = "$ "+total.toString(),
-                    style = TextStyle(
-                        fontWeight = FontWeight.Bold,
-                    ), fontSize = 16.sp
-                )
-            }
-        )
         Spacer(modifier = Modifier.height(10.dp))
-            Button(
-                onClick = {},
-                modifier = Modifier.fillMaxWidth()
-            ) {
-                Text(text = "Realizar Venta")
-            }
+        Button(
+            onClick = { /* acción del botón */ },
+            modifier = Modifier.fillMaxWidth()
+        ) {
+            Text(text = "Registrar Prendas")
+        }
 
         Spacer(modifier = Modifier.height(80.dp))
     }

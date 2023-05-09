@@ -1,11 +1,9 @@
 package org.minutodedios.roperos.screens.home
 
-import androidx.compose.animation.animateContentSize
 import androidx.compose.animation.core.animateDpAsState
 import androidx.compose.animation.core.tween
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
-import androidx.compose.foundation.gestures.draggable
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
@@ -43,10 +41,10 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewmodel.compose.viewModel
+import androidx.navigation.NavHostController
 import kotlinx.coroutines.launch
 import org.minutodedios.roperos.AuthViewModel
 import org.minutodedios.roperos.R
@@ -54,9 +52,9 @@ import org.minutodedios.roperos.R
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-@Preview
 fun HomeScreen(
-   authViewModel: AuthViewModel = viewModel()
+    authViewModel: AuthViewModel = viewModel(),
+    navController: NavHostController
 ){
     val drawerState = rememberDrawerState(DrawerValue.Closed)
     val scope = rememberCoroutineScope()
@@ -143,11 +141,15 @@ fun HomeScreen(
                     animationSpec = tween(durationMillis = 300)
                 )
 
+                val route = listOf("","clothesEntryScreen","","inventoryScreen")
                 Box(
                     Modifier.fillMaxSize(), contentAlignment = Alignment.Center
                 ) {
                     Card(
-                        onClick = { isActive = !isActive  },
+                        onClick = {
+                            isActive = !isActive
+                            navController.navigate(route[index])
+                                  },
                         modifier = Modifier
                             .size(width = 340.dp, height = 180.dp)
                             .offset(y = offset)
