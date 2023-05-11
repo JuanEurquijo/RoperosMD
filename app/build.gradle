@@ -78,6 +78,9 @@ dependencies {
     // Iconos
     implementation 'androidx.compose.material:material-icons-extended:1.4.2'
 
+    //Gson
+    implementation 'com.google.code.gson:gson:2.9.1'
+
     // Firebase Services
     implementation platform('com.google.firebase:firebase-bom:31.5.0')
     implementation 'com.google.firebase:firebase-analytics-ktx'

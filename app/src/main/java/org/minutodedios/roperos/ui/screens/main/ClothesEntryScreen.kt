@@ -41,21 +41,29 @@ import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavHostController
+import org.minutodedios.roperos.DatabaseViewModel
 import org.minutodedios.roperos.R
+import org.minutodedios.roperos.model.Item
 import org.minutodedios.roperos.ui.navigation.main.MainNavigationRoutes
 
 @SuppressLint("UnrememberedMutableState")
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun ClothesEntryScreen(
-    navController: NavHostController
+    navController: NavHostController,
+    databaseViewModel: DatabaseViewModel = viewModel()
 ) {
+
     data class ListItemData(
         val headlineText: String,
         var value: MutableState<Int>
 
     )
+
+    val entry = mutableStateOf(Item("","",0))
+    val newQuantity = mutableStateOf(0)
 
     val listItems = mutableStateListOf(
         ListItemData("Camisas - Camisetas", mutableStateOf(1)),
@@ -154,6 +162,15 @@ fun ClothesEntryScreen(
                                     imageVector = Icons.Filled.Add,
                                     contentDescription = "Icon Add")
                             }
+                            if (item.headlineText == "Camisas - Camisetas") {
+                                for (shirt in databaseViewModel.state.value.items) {
+                                    if (shirt.category == "Camisas - Camisetas") {
+                                        entry.value = shirt
+                                        newQuantity.value = shirt.quantity + item.value.value
+                                    }
+                                }
+                            }
+
                         }},
                         leadingContent = {
                             Row{
@@ -172,7 +189,8 @@ fun ClothesEntryScreen(
         }
         Spacer(modifier = Modifier.height(10.dp))
         Button(
-            onClick = { /* acción del botón */ },
+            onClick = { databaseViewModel.updateShirt(entry.value,newQuantity.value)
+                      navController.navigate(MainNavigationRoutes.HomeScreenRoute.route)},
             modifier = Modifier.fillMaxWidth()
         ) {
             Text(text = "Registrar Prendas")

@@ -31,6 +31,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavHostController
 import org.minutodedios.roperos.R
+import org.minutodedios.roperos.ui.navigation.main.MainNavigationRoutes
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -54,7 +55,7 @@ fun InventoryOptionsScreen(navController: NavHostController) {
             .padding(16.dp),
         horizontalAlignment = Alignment.Start
     ) {
-        IconButton(onClick = {/*navController.navigate(MainNavigationRoutes.HomeScreenRoute.route)*/}) {
+        IconButton(onClick = {navController.navigate(MainNavigationRoutes.HomeScreenRoute.route)}) {
             Icon(imageVector = Icons.Filled.ArrowBack, contentDescription = "Icon Menu")
         }
     }
@@ -108,6 +109,7 @@ fun InventoryOptionsScreen(navController: NavHostController) {
                 }
             }
         }
+        Spacer(modifier = Modifier.height(60.dp))
     }
 
 

@@ -18,6 +18,7 @@ import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.itemsIndexed
 import androidx.compose.foundation.shape.CircleShape
+import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
 import androidx.compose.material.icons.filled.ArrowBack
@@ -28,6 +29,7 @@ import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.ListItem
 import androidx.compose.material3.Text
+import androidx.compose.material3.TextField
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.getValue
@@ -42,6 +44,9 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.input.KeyboardType
+import androidx.compose.ui.text.style.TextAlign
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavHostController
@@ -59,7 +64,7 @@ fun CartScreen(
         var value: MutableState<Int>
 
     )
-
+    var textOtherProducts by remember { mutableStateOf("") }
     var subtotal by remember { mutableStateOf(1) }
     var total by remember { mutableStateOf(1) }
     val listItems = mutableStateListOf(
@@ -161,12 +166,28 @@ fun CartScreen(
                                 }
                             }
                         },
-                        trailingContent = { Text(
-                            text="$ "+subtotal.toString(),
-                            style = TextStyle(
-                                fontWeight = FontWeight.Bold,
-                            ), fontSize = 14.sp
-                        ) },
+                        trailingContent = {
+                            if (item.headlineText == "Otros") {
+                                TextField(
+                                    value = textOtherProducts,
+                                    onValueChange = { textOtherProducts = it },
+                                    label = { Text("") },
+                                    modifier = Modifier.height(50.dp).
+                                            width(100.dp)
+                                        .fillMaxSize()
+                                        .padding(0.dp),
+                                    textStyle = TextStyle(fontSize = 15.sp),
+                                    keyboardOptions = KeyboardOptions.Default.copy(keyboardType = KeyboardType.Number))
+
+                            } else {
+                                Text(
+                                    text = "$ " + subtotal.toString(),
+                                    style = TextStyle(
+                                        fontWeight = FontWeight.Bold,
+                                    ), fontSize = 14.sp
+
+                                )
+                            }},
                         leadingContent = {
                             Row{
                                 Image(
