@@ -25,7 +25,7 @@
         </activity>
 
         <activity
-            android:name=".activities.MainActivity"
+            android:name=".activities.RootActivity"
             android:theme="@style/Theme.AppRoperosMD">
         </activity>
 

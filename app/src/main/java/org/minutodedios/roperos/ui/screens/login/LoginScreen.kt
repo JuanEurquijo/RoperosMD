@@ -2,10 +2,8 @@ package org.minutodedios.roperos.ui.screens.login
 
 import android.util.Log
 import androidx.compose.foundation.Image
-import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -26,15 +24,12 @@ import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.MutableState
-import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.saveable.rememberSaveable
-import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalSoftwareKeyboardController
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.TextStyle
@@ -46,18 +41,15 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewmodel.compose.viewModel
-import org.minutodedios.roperos.AuthViewModel
 import org.minutodedios.roperos.R
-import org.minutodedios.roperos.services.authentication.mock.MockAuthenticationService
+import org.minutodedios.roperos.services.authentication.MockAuthenticationService
+import org.minutodedios.roperos.ui.state.AuthViewModel
 import org.minutodedios.roperos.ui.theme.ApplicationTheme
 
 @Composable
 fun LoginScreen(
     authViewModel: AuthViewModel = viewModel(),
-    initialStateIsLogin: Boolean = true
 ) {
-    var mustShowLogin by remember { mutableStateOf(initialStateIsLogin) }
-
     Surface(
         modifier = Modifier
             .fillMaxSize()
@@ -73,52 +65,21 @@ fun LoginScreen(
             )
 
             Text(
-                text = (if (mustShowLogin) "Iniciar Sesión" else "Crea una cuenta"),
+                text = ("Iniciar Sesión"),
                 style = TextStyle(
                     fontWeight = FontWeight.Bold,
                 ), fontSize = 30.sp
             )
 
-            UserForm(
-                isCreatingAccount = !mustShowLogin
-            ) { email, password ->
+            UserForm { email, password ->
                 // TODO: Mostrar los errores
-                if (mustShowLogin) {
-                    // Inicio de sesión
-                    authViewModel.authService.login(email, password) {
-                        Log.d(
-                            authViewModel.authService::class.simpleName,
-                            "[$it] Resultado de inicio de sesión con la cuenta: $email"
-                        )
-                    }
-                } else {
-                    authViewModel.authService.register(email, password) {
-                        Log.d(
-                            authViewModel.authService::class.simpleName,
-                            "[$it] Creación de la cuenta: $email"
-                        )
-                    }
+                // Inicio de sesión
+                authViewModel.authService.login(email, password) {
+                    Log.d(
+                        authViewModel.authService::class.simpleName,
+                        "[$it] Resultado de inicio de sesión con la cuenta: $email"
+                    )
                 }
-            }
-
-            Spacer(modifier = Modifier.height(15.dp))
-            Row(
-                horizontalArrangement = Arrangement.Center,
-                verticalAlignment = Alignment.CenterVertically
-            ) {
-                val text1 =
-                    if (mustShowLogin) "¿Aún no tienes cuenta?"
-                    else "¿Ya tienes una cuenta?"
-                val text2 =
-                    if (mustShowLogin) "Regístrate"
-                    else "Inicia Sesión"
-                Text(text = text1)
-                Text(text = text2,
-                    modifier = Modifier
-                        .clickable { mustShowLogin = !mustShowLogin }
-                        .padding(start = 5.dp),
-                    color = Color.Blue
-                )
             }
         }
     }
@@ -128,22 +89,13 @@ fun LoginScreen(
 @Composable
 fun SignInScreenPreview() {
     ApplicationTheme {
-        LoginScreen(AuthViewModel(MockAuthenticationService()), initialStateIsLogin = true)
-    }
-}
-
-@Preview
-@Composable
-fun SignUpScreenPreview() {
-    ApplicationTheme {
-        LoginScreen(AuthViewModel(MockAuthenticationService()), initialStateIsLogin = false)
+        LoginScreen(AuthViewModel(MockAuthenticationService()))
     }
 }
 
 @OptIn(ExperimentalComposeUiApi::class)
 @Composable
 fun UserForm(
-    isCreatingAccount: Boolean = false,
     onDone: (String, String) -> Unit
 ) {
     val email = rememberSaveable {
@@ -181,7 +133,7 @@ fun UserForm(
         Spacer(modifier = Modifier.height(15.dp))
 
         SubmitInput(
-            textId = if (isCreatingAccount) "Crear Cuenta" else "Iniciar Sesión",
+            textId = "Iniciar Sesión",
             validInput = valid
         ) {
             onDone(email.value.trim(), password.value.trim())

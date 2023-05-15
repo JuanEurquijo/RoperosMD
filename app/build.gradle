@@ -4,6 +4,7 @@ plugins {
     id 'kotlin-kapt'
     id 'com.google.dagger.hilt.android'
     id 'com.google.gms.google-services'
+    id 'org.jetbrains.kotlin.plugin.serialization'
 }
 
 android {
@@ -58,7 +59,7 @@ android {
 
 dependencies {
 
-    implementation 'androidx.core:core-ktx:1.10.0'
+    implementation 'androidx.core:core-ktx:1.10.1'
     implementation 'androidx.lifecycle:lifecycle-runtime-ktx:2.6.1'
     implementation 'androidx.activity:activity-compose:1.7.1'
     implementation platform('androidx.compose:compose-bom:2022.10.00')
@@ -66,6 +67,12 @@ dependencies {
     implementation 'androidx.compose.ui:ui-graphics'
     implementation 'androidx.compose.ui:ui-tooling-preview'
     implementation 'androidx.compose.material3:material3'
+
+    // Concurrency
+    implementation 'org.jetbrains.kotlinx:kotlinx-coroutines-android:1.6.4'
+
+    // State management
+    implementation 'androidx.compose.runtime:runtime-livedata:1.4.3'
 
     // Inyección de dependencias con hilt
     implementation "com.google.dagger:hilt-android:2.45"
@@ -76,9 +83,10 @@ dependencies {
     implementation 'androidx.hilt:hilt-navigation-compose:1.0.0'
 
     // Iconos
-    implementation 'androidx.compose.material:material-icons-extended:1.4.2'
+    implementation 'androidx.compose.material:material-icons-extended:1.4.3'
 
-    //Gson
+    // Serialization engines
+    implementation 'org.jetbrains.kotlinx:kotlinx-serialization-json:1.5.0'
     implementation 'com.google.code.gson:gson:2.9.1'
 
     // Firebase Services

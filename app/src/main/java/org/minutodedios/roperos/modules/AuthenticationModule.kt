@@ -5,7 +5,7 @@ import dagger.Provides
 import dagger.hilt.InstallIn
 import dagger.hilt.components.SingletonComponent
 import org.minutodedios.roperos.services.authentication.IAuthenticationService
-import org.minutodedios.roperos.services.authentication.firebase.FirebaseAuthenticationService
+import org.minutodedios.roperos.services.authentication.FirebaseAuthenticationService
 
 /**
  * Módulo de inyección de la dependencia de autenticación

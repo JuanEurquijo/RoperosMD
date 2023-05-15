@@ -19,7 +19,7 @@ class StartActivity : ComponentActivity() {
         setContent {
             ApplicationTheme {
                 StartScreen {
-                    startActivity(Intent(this, MainActivity::class.java))
+                    startActivity(Intent(this, RootActivity::class.java))
                     this.finish()
                 }
             }

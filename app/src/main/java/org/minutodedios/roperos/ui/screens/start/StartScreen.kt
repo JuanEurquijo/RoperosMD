@@ -21,7 +21,11 @@ import org.minutodedios.roperos.R
 import org.minutodedios.roperos.ui.theme.ApplicationTheme
 
 @Composable
-fun StartScreen(initialScale: Float = 0f, targetValue: Float = 1.8f, onComplete: () -> Unit) {
+fun StartScreen(
+    initialScale: Float = 0f,
+    targetValue: Float = 1.8f,
+    onComplete: () -> Unit
+) {
     val scale = remember { Animatable(initialScale) }
 
     // Bouncy effect
@@ -43,9 +47,11 @@ fun StartScreen(initialScale: Float = 0f, targetValue: Float = 1.8f, onComplete:
         onComplete.invoke()
     }
 
-    Box(modifier = Modifier
-        .fillMaxSize()
-        .background(color = Color.White)) {
+    Box(
+        modifier = Modifier
+            .fillMaxSize()
+            .background(color = Color.White)
+    ) {
         Image(
             painter = painterResource(id = R.drawable.brand),
             contentDescription = null,
