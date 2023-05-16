@@ -8,16 +8,9 @@ import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import kotlinx.coroutines.runBlocking
 import org.minutodedios.roperos.model.Category
-import org.minutodedios.roperos.model.Subcategory
 import org.minutodedios.roperos.navigation.routes.RootNavigationRoutes
 import org.minutodedios.roperos.services.database.MockDatabaseService
 import org.minutodedios.roperos.ui.theme.ApplicationTheme
-
-data class CartEntry(
-    val category: String,
-    val subcategory: Subcategory,
-    var quantity: Int
-)
 
 enum class ShoppingCartRoutes(
     val route: String
@@ -38,14 +31,14 @@ fun ShoppingCart(
         startDestination = ShoppingCartRoutes.Initial.route
     ) {
         composable(ShoppingCartRoutes.Initial.route) {
-            ShoppingCartHome(
+            CartItems(
                 navController = navController,
                 shoppingCart = shoppingCart,
             )
         }
 
         composable(ShoppingCartRoutes.AddToCart.route) {
-            ShoppingCartAdd(
+            CartAdd(
                 navController = navController,
                 categories = categories,
             ) {
@@ -54,7 +47,8 @@ fun ShoppingCart(
 
                     // Check if it is possible to add the item and add it
                     if (item.quantity < item.subcategory.quantity) {
-                        item.quantity++
+                        shoppingCart[shoppingCart.indexOf(it)] =
+                            item.copy(quantity = item.quantity + 1)
                     }
                 } else {
                     shoppingCart.add(it)

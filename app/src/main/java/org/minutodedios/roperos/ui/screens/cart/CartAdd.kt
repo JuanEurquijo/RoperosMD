@@ -32,7 +32,7 @@ import java.util.Locale
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun ShoppingCartAdd(
+fun CartAdd(
     navController: NavHostController,
     categories: List<Category>, selected: (CartEntry) -> Unit
 ) {
@@ -89,7 +89,7 @@ fun ShoppingCartAdd(
 @Preview(showBackground = true)
 fun AddToCartPreview() {
     ApplicationTheme {
-        ShoppingCartAdd(
+        CartAdd(
             navController = rememberNavController(),
             categories = runBlocking { MockDatabaseService().inventoryForLocation("") }) {
         }

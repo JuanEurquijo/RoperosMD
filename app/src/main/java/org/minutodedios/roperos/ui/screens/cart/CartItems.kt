@@ -26,7 +26,6 @@ import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.key
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
@@ -39,7 +38,7 @@ import java.util.Locale
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun ShoppingCartHome(
+fun CartItems(
     navController: NavHostController,
     shoppingCart: MutableList<CartEntry>,
 ) {
@@ -70,47 +69,55 @@ fun ShoppingCartHome(
                     )
                     Text("No hay elementos")
                 } else {
-                    shoppingCart.forEach {
-                        key(it) {
-                            ListItem(
-                                headlineText = {
-                                    Text(it.subcategory.subcategory.capitalize(Locale.ROOT))
-                                },
-                                supportingText = { Text(it.category.capitalize(Locale.ROOT)) },
-                                overlineText = { Text("Cantidad Disponible: ${it.subcategory.quantity}") },
-                                leadingContent = {
+                    shoppingCart.forEachIndexed { index, item ->
+                        ListItem(
+                            headlineText = {
+                                Text(item.subcategory.subcategory.capitalize(Locale.ROOT))
+                            },
+                            supportingText = { Text(item.category.capitalize(Locale.ROOT)) },
+                            overlineText = { Text("Cantidad Disponible: ${item.subcategory.quantity}") },
+                            leadingContent = {
+                                FilledIconButton(
+                                    onClick = {
+                                        shoppingCart.remove(item)
+                                    },
+                                    colors = IconButtonDefaults.filledTonalIconButtonColors()
+                                ) {
+                                    Icon(Icons.Filled.DeleteForever, contentDescription = null)
+                                }
+                            },
+                            trailingContent = {
+                                Row(
+                                    verticalAlignment = Alignment.CenterVertically,
+                                ) {
                                     FilledIconButton(
-                                        onClick = { /*TODO*/ },
-                                        colors = IconButtonDefaults.filledTonalIconButtonColors()
+                                        onClick = {
+                                            // Remove one Item
+                                            shoppingCart[index] =
+                                                item.copy(quantity = item.quantity - 1)
+                                        },
+                                        enabled = item.quantity > 1
                                     ) {
-                                        Icon(Icons.Filled.DeleteForever, contentDescription = null)
+                                        Icon(Icons.Filled.Remove, contentDescription = null)
                                     }
-                                },
-                                trailingContent = {
-                                    Row(
-                                        verticalAlignment = Alignment.CenterVertically,
+
+                                    Badge(modifier = Modifier.height(32.dp)) {
+                                        Text(item.quantity.toString())
+                                    }
+
+                                    FilledIconButton(
+                                        onClick = {
+                                            // Add one item
+                                            shoppingCart[index] =
+                                                item.copy(quantity = item.quantity + 1)
+                                        },
+                                        enabled = item.quantity < item.subcategory.quantity
                                     ) {
-                                        FilledIconButton(
-                                            onClick = { it.quantity-- /*TODO*/ },
-                                            enabled = it.quantity > 0
-                                        ) {
-                                            Icon(Icons.Filled.Remove, contentDescription = null)
-                                        }
-
-                                        Badge(modifier = Modifier.height(32.dp)) {
-                                            Text(it.quantity.toString())
-                                        }
-
-                                        FilledIconButton(
-                                            onClick = { it.quantity++ /*TODO*/ },
-                                            enabled = it.quantity < it.subcategory.quantity
-                                        ) {
-                                            Icon(Icons.Filled.Add, contentDescription = null)
-                                        }
-
+                                        Icon(Icons.Filled.Add, contentDescription = null)
                                     }
-                                })
-                        }
+
+                                }
+                            })
                     }
                 }
             }
@@ -141,7 +148,7 @@ fun ShoppingCartHome(
 @Preview(showBackground = true)
 fun ShoppingCartHomeEmptyPreview() {
     ApplicationTheme {
-        ShoppingCartHome(
+        CartItems(
             navController = rememberNavController(), shoppingCart = mutableListOf()
         )
     }
@@ -151,7 +158,7 @@ fun ShoppingCartHomeEmptyPreview() {
 @Preview(showBackground = true)
 fun ShoppingCartHomeFilledPreview() {
     ApplicationTheme {
-        ShoppingCartHome(
+        CartItems(
             navController = rememberNavController(), shoppingCart = mutableListOf(
                 CartEntry("Lorem", Subcategory("Ipsum", 2000.0, 10), 3),
                 CartEntry("Ipsum", Subcategory("Dolor", 3000.0, 5), 5)
