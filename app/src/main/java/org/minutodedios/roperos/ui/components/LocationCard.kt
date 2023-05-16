@@ -10,8 +10,10 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import org.minutodedios.roperos.model.Location
+import org.minutodedios.roperos.ui.theme.ApplicationTheme
 
 @Composable
 fun LocationCard(
@@ -28,5 +30,13 @@ fun LocationCard(
             )
             Text(text = location.city, textAlign = TextAlign.Center)
         }
+    }
+}
+
+@Composable
+@Preview
+fun LocationCardPreview() {
+    ApplicationTheme {
+        LocationCard(location = Location("lorem_ipsum", "Lorem", "Ipsum"))
     }
 }

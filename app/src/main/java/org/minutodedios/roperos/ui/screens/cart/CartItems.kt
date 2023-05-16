@@ -38,7 +38,7 @@ import java.util.Locale
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun CartItems(
+internal fun CartItems(
     navController: NavHostController,
     shoppingCart: MutableList<CartEntry>,
 ) {

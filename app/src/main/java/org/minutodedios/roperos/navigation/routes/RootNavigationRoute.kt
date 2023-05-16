@@ -1,6 +1,6 @@
 package org.minutodedios.roperos.navigation.routes
 
-enum class RootNavigationRoutes(override val route: String) : Route {
+enum class RootNavigationRoute(val route: String) {
     RootRoute("/"),
     HomeRoute("home"),
     CartRoute("cart"),

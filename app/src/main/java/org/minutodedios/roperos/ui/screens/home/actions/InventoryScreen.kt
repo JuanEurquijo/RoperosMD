@@ -69,12 +69,11 @@ fun InventoryScreen(
     if (user.value != null) {
         if (runAsync) {
             LaunchedEffect(true) {
-                categories =
-                    withContext(Dispatchers.IO) {
-                        databaseViewModel.databaseService.inventoryForLocation(
-                            user.value!!.location.id
-                        )
-                    }
+                categories = withContext(Dispatchers.IO) {
+                    databaseViewModel.databaseService.inventoryForLocation(
+                        user.value!!.location.id
+                    )
+                }
             }
         } else {
             categories = runBlocking {
@@ -86,19 +85,29 @@ fun InventoryScreen(
     }
 
     if (user.value != null && categories.isNotEmpty()) {
-        Scaffold(
-            topBar = {
-                TopAppBar(title = { Text(text = "Inventario") }, navigationIcon = {
-                    IconButton(onClick = { navController.navigateUp() }) {
-                        Icon(Icons.Filled.ArrowBack, contentDescription = "Ir atrás")
-                    }
-                })
-            }
-        ) { paddingValues ->
+        Scaffold(topBar = {
+            TopAppBar(title = { Text(text = "Inventario") }, navigationIcon = {
+                IconButton(onClick = { navController.navigateUp() }) {
+                    Icon(Icons.Filled.ArrowBack, contentDescription = "Ir atrás")
+                }
+            })
+        }) { paddingValues ->
             Column(
-                modifier = Modifier
-                    .padding(paddingValues)
+                modifier = Modifier.padding(paddingValues)
             ) {
+                Column(modifier = Modifier.padding(32.dp)) {
+                    Text(
+                        "Estas consultando el inventario del ropero:",
+                    )
+                    Text(
+                        user.value!!.location.name, style = TextStyle(
+                            fontSize = 32.sp,
+                            fontWeight = FontWeight.Medium
+                        )
+                    )
+                }
+
+
                 categories.forEach {
                     Card(
                         Modifier
@@ -110,8 +119,7 @@ fun InventoryScreen(
                         ) {
                             Text(
                                 it.category.uppercase(), style = TextStyle(
-                                    fontSize = 21.sp,
-                                    fontWeight = FontWeight.Bold
+                                    fontSize = 21.sp, fontWeight = FontWeight.Bold
                                 )
                             )
 

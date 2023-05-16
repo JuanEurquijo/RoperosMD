@@ -8,11 +8,11 @@ import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import kotlinx.coroutines.runBlocking
 import org.minutodedios.roperos.model.Category
-import org.minutodedios.roperos.navigation.routes.RootNavigationRoutes
+import org.minutodedios.roperos.navigation.routes.RootNavigationRoute
 import org.minutodedios.roperos.services.database.MockDatabaseService
 import org.minutodedios.roperos.ui.theme.ApplicationTheme
 
-enum class ShoppingCartRoutes(
+internal enum class ShoppingCartRoutes(
     val route: String
 ) {
     Initial("initial"),
@@ -27,7 +27,7 @@ fun ShoppingCart(
 ) {
     NavHost(
         navController = navController,
-        route = RootNavigationRoutes.CartRoute.route,
+        route = RootNavigationRoute.CartRoute.route,
         startDestination = ShoppingCartRoutes.Initial.route
     ) {
         composable(ShoppingCartRoutes.Initial.route) {

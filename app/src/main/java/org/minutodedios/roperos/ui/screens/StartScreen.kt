@@ -1,4 +1,4 @@
-package org.minutodedios.roperos.ui.screens.start
+package org.minutodedios.roperos.ui.screens
 
 import android.view.animation.OvershootInterpolator
 import androidx.compose.animation.core.Animatable

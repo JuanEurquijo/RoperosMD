@@ -5,7 +5,7 @@ import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import dagger.hilt.android.AndroidEntryPoint
-import org.minutodedios.roperos.ui.screens.start.StartScreen
+import org.minutodedios.roperos.ui.screens.StartScreen
 import org.minutodedios.roperos.ui.theme.ApplicationTheme
 
 /**

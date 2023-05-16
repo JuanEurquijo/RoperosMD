@@ -1,4 +1,4 @@
-package org.minutodedios.roperos.ui.screens.login
+package org.minutodedios.roperos.ui.screens
 
 import android.util.Log
 import androidx.compose.foundation.Image

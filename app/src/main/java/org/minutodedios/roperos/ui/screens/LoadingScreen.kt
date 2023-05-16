@@ -1,4 +1,4 @@
-package org.minutodedios.roperos.ui.screens.login
+package org.minutodedios.roperos.ui.screens
 
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -17,7 +17,7 @@ import androidx.compose.ui.unit.dp
 import org.minutodedios.roperos.ui.theme.ApplicationTheme
 
 @Composable
-fun LoginLoadingScreen() {
+fun LoadingScreen() {
     Column(
         modifier = Modifier
             .fillMaxSize()
@@ -38,6 +38,6 @@ fun LoginLoadingScreen() {
 @Preview(showBackground = true)
 fun LoginReadyScreenPreview() {
     ApplicationTheme {
-        LoginLoadingScreen()
+        LoadingScreen()
     }
 }

@@ -8,8 +8,8 @@ import androidx.compose.runtime.livedata.observeAsState
 import androidx.navigation.compose.rememberNavController
 import dagger.hilt.android.AndroidEntryPoint
 import org.minutodedios.roperos.navigation.RootNavigationGraph
-import org.minutodedios.roperos.ui.screens.login.LoginLoadingScreen
-import org.minutodedios.roperos.ui.screens.login.LoginScreen
+import org.minutodedios.roperos.ui.screens.LoadingScreen
+import org.minutodedios.roperos.ui.screens.LoginScreen
 import org.minutodedios.roperos.ui.state.AuthViewModel
 import org.minutodedios.roperos.ui.theme.ApplicationTheme
 
@@ -36,7 +36,7 @@ class RootActivity : ComponentActivity() {
                 else if (isAuthenticationReady.value!!)
                     LoginScreen()
                 else
-                    LoginLoadingScreen()
+                    LoadingScreen()
             }
         }
     }
