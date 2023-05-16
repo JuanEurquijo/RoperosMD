@@ -31,12 +31,13 @@ class RootActivity : ComponentActivity() {
             val isAuthenticationReady = authViewModel.isReady.observeAsState()
 
             ApplicationTheme {
-                if (isAuthenticated.value!!)
+                if (isAuthenticated.value == true) {
                     RootNavigationGraph(navController = rememberNavController())
-                else if (isAuthenticationReady.value!!)
+                } else if (isAuthenticationReady.value == true) {
                     LoginScreen()
-                else
+                } else {
                     LoadingScreen()
+                }
             }
         }
     }

@@ -1,5 +1,6 @@
 package org.minutodedios.roperos.ui.state
 
+import android.util.Log
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -22,9 +23,12 @@ class AuthViewModel @Inject constructor(
 
     init {
         authService.addAuthStateListener {
+            // Set new values
             authenticated.value = it
             user.value = authService.user
             isReady.value = authService.isReady
+
+            Log.d(this::class.simpleName, "AuthenticationListenerInvoked")
         }
     }
 }

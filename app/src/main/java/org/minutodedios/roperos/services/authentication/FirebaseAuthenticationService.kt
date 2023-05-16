@@ -13,7 +13,6 @@ import kotlinx.serialization.decodeFromString
 import kotlinx.serialization.json.Json
 import org.json.JSONObject
 import org.minutodedios.roperos.model.User
-import kotlin.properties.Delegates
 
 /**
  * Proveedor del servicio de autenticación de Firebase
@@ -36,10 +35,11 @@ class FirebaseAuthenticationService(
     /**
      * Usuario actualmente autenticado
      */
-    private var _currentUser by Delegates.observable<User?>(null) { _, _, newValue ->
-        listeners.forEach { it.invoke(newValue != null) }
-    }
+    private var _currentUser: User? = null
 
+    /**
+     * Base de datos está lista
+     */
     private var _isReady = false
 
     override val isReady: Boolean
@@ -70,6 +70,9 @@ class FirebaseAuthenticationService(
     init {
         // Listener en cambios de autenticación
         auth.addAuthStateListener {
+            // Set is ready to true on every request
+            _isReady = true
+
             runBlocking {
                 _currentUser =
                     if (it.currentUser == null) null else findUserFromFirestore(it.currentUser!!)
@@ -80,8 +83,8 @@ class FirebaseAuthenticationService(
                 "AuthenticationStatus[${this.authenticated}]: ${_currentUser.toString()}"
             )
 
-            // Set is ready to true on every request
-            _isReady = true
+            // Invocar a los usuarios que escuchan
+            listeners.forEach { it.invoke(_currentUser != null) }
         }
     }
 
