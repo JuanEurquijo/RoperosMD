@@ -8,6 +8,7 @@ import androidx.compose.runtime.livedata.observeAsState
 import androidx.navigation.compose.rememberNavController
 import dagger.hilt.android.AndroidEntryPoint
 import org.minutodedios.roperos.navigation.RootNavigationGraph
+import org.minutodedios.roperos.ui.screens.login.LoginLoadingScreen
 import org.minutodedios.roperos.ui.screens.login.LoginScreen
 import org.minutodedios.roperos.ui.state.AuthViewModel
 import org.minutodedios.roperos.ui.theme.ApplicationTheme
@@ -27,15 +28,16 @@ class RootActivity : ComponentActivity() {
 
         setContent {
             val isAuthenticated = authViewModel.authenticated.observeAsState()
+            val isAuthenticationReady = authViewModel.isReady.observeAsState()
 
             ApplicationTheme {
-                if (isAuthenticated.value!!) {
+                if (isAuthenticated.value!!)
                     RootNavigationGraph(navController = rememberNavController())
-                } else {
+                else if (isAuthenticationReady.value!!)
                     LoginScreen()
-                }
+                else
+                    LoginLoadingScreen()
             }
         }
     }
-
 }

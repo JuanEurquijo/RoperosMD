@@ -17,10 +17,14 @@ class AuthViewModel @Inject constructor(
     var user = MutableLiveData(authService.user)
         private set
 
+    var isReady = MutableLiveData(authService.isReady)
+        private set
+
     init {
         authService.addAuthStateListener {
             authenticated.value = it
             user.value = authService.user
+            isReady.value = authService.isReady
         }
     }
 }

@@ -40,6 +40,11 @@ class FirebaseAuthenticationService(
         listeners.forEach { it.invoke(newValue != null) }
     }
 
+    private var _isReady = false
+
+    override val isReady: Boolean
+        get() = _isReady
+
     private suspend fun findUserFromFirestore(firebaseUser: FirebaseUser): User {
         // Get the user email
         val userEmail = firebaseUser.email!!;
@@ -74,6 +79,9 @@ class FirebaseAuthenticationService(
                 "FirebaseAuthenticationListener",
                 "AuthenticationStatus[${this.authenticated}]: ${_currentUser.toString()}"
             )
+
+            // Set is ready to true on every request
+            _isReady = true
         }
     }
 

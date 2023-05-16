@@ -15,18 +15,23 @@ import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Visibility
 import androidx.compose.material.icons.filled.VisibilityOff
+import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.Button
+import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
+import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.MutableState
+import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.saveable.rememberSaveable
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.Modifier
@@ -50,6 +55,14 @@ import org.minutodedios.roperos.ui.theme.ApplicationTheme
 fun LoginScreen(
     authViewModel: AuthViewModel = viewModel(),
 ) {
+    var isLoading by remember {
+        mutableStateOf(false)
+    }
+
+    var showError by remember {
+        mutableStateOf(false)
+    }
+
     Surface(
         modifier = Modifier
             .fillMaxSize()
@@ -71,16 +84,50 @@ fun LoginScreen(
                 ), fontSize = 30.sp
             )
 
-            UserForm { email, password ->
-                // TODO: Mostrar los errores
-                // Inicio de sesión
-                authViewModel.authService.login(email, password) {
-                    Log.d(
-                        authViewModel.authService::class.simpleName,
-                        "[$it] Resultado de inicio de sesión con la cuenta: $email"
-                    )
+            if (!isLoading) {
+                UserForm { email, password ->
+                    // TODO: Mostrar los errores
+                    isLoading = true // Change state to loading
+                    authViewModel.authService.login(email, password) {
+                        Log.d(
+                            authViewModel.authService::class.simpleName,
+                            "[$it] Resultado de inicio de sesión con la cuenta: $email"
+                        )
+                        isLoading = false // Change state to not loading
+                        showError = !it // Change error state on result
+                    }
                 }
+            } else {
+                // Alert on LoadingScreen
+                AlertDialog(
+                    onDismissRequest = {
+                    },
+                    confirmButton = {
+                    },
+                    title = {
+                        Text(text = "Iniciando Sesión")
+                    },
+                    text = {
+                        Text(text = "Espera mientras iniciamos tu sesión")
+                    },
+                    icon = {
+                        CircularProgressIndicator(modifier = Modifier.padding(16.dp))
+                    }
+                )
             }
+
+            // ErrorDialog on Error
+            if (showError)
+                AlertDialog(
+                    title = { Text(text = "Error de inicio de sesión") },
+                    text = { Text(text = "Revisa tus credenciales, si el problema persiste contacta al administrador") },
+                    onDismissRequest = { showError = false },
+                    confirmButton = {
+                        TextButton(onClick = { showError = false }) {
+                            Text(text = "Ok")
+                        }
+                    },
+                )
         }
     }
 }

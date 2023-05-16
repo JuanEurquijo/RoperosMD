@@ -39,4 +39,9 @@ sealed interface IAuthenticationService {
      * Getter para el usuario, puede ser null si no está autenticado
      */
     val user: User?
+
+    /**
+     * Getter para saber si la autenticación está lista
+     */
+    val isReady: Boolean
 }

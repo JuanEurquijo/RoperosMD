@@ -12,6 +12,8 @@ class MockAuthenticationService(
 
     private var _currentUser: User? = null
 
+    override val isReady: Boolean = true
+
     init {
         if (initAsAuthenticated) {
             _currentUser = User(
