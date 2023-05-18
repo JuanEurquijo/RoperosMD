@@ -86,7 +86,9 @@ fun InventoryScreen(
 
     if (user.value != null && categories.isNotEmpty()) {
         Scaffold(topBar = {
-            TopAppBar(title = { Text(text = "Inventario") }, navigationIcon = {
+            TopAppBar(title = { Text(text = "Inventario", modifier = Modifier
+                .fillMaxWidth()
+                .padding(90.dp,30.dp,0.dp,0.dp) )},navigationIcon = {
                 IconButton(onClick = { navController.navigateUp() }) {
                     Icon(Icons.Filled.ArrowBack, contentDescription = "Ir atrás")
                 }
@@ -112,7 +114,7 @@ fun InventoryScreen(
                     Card(
                         Modifier
                             .fillMaxWidth()
-                            .padding(8.dp)
+                            .padding(25.dp,0.dp,25.dp,12.dp)
                     ) {
                         Column(
                             Modifier.padding(16.dp)

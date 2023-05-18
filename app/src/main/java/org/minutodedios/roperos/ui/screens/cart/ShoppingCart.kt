@@ -10,13 +10,16 @@ import kotlinx.coroutines.runBlocking
 import org.minutodedios.roperos.model.Category
 import org.minutodedios.roperos.navigation.routes.RootNavigationRoute
 import org.minutodedios.roperos.services.database.MockDatabaseService
+import org.minutodedios.roperos.ui.screens.HomeScreen
+import org.minutodedios.roperos.ui.screens.UserRegisterScreen
 import org.minutodedios.roperos.ui.theme.ApplicationTheme
 
 internal enum class ShoppingCartRoutes(
     val route: String
 ) {
     Initial("initial"),
-    AddToCart("addToCart")
+    AddToCart("addToCart"),
+    UserRegister("user")
 }
 
 @Composable
@@ -54,6 +57,9 @@ fun ShoppingCart(
                     shoppingCart.add(it)
                 }
             }
+        }
+        composable(ShoppingCartRoutes.UserRegister.route){
+            UserRegisterScreen(navController = navController)
         }
     }
 }

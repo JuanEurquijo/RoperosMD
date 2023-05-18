@@ -9,6 +9,7 @@ import org.minutodedios.roperos.navigation.routes.ActionsNavigationRoute
 import org.minutodedios.roperos.navigation.routes.RootNavigationRoute
 import org.minutodedios.roperos.ui.screens.FallbackScreen
 import org.minutodedios.roperos.ui.screens.HomeScreen
+import org.minutodedios.roperos.ui.screens.UserRegisterScreen
 import org.minutodedios.roperos.ui.screens.home.actions.InventoryScreen
 import org.minutodedios.roperos.ui.screens.home.actions.SalesScreen
 

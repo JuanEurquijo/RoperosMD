@@ -71,6 +71,9 @@ fun HomeScreen(
                         )
                         Text(
                             text = user.value!!.email,
+                            style = TextStyle(
+                                fontSize = 14.sp,
+                            )
                         )
                     }
 
@@ -89,7 +92,7 @@ fun HomeScreen(
             // Mostrar las opciones
             LazyVerticalGrid(
                 columns = GridCells.Fixed(2),
-                contentPadding = PaddingValues(16.dp),
+                contentPadding = PaddingValues(25.dp),
                 verticalArrangement = Arrangement.spacedBy(8.dp),
                 horizontalArrangement = Arrangement.spacedBy(8.dp)
             ) {

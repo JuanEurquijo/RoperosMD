@@ -12,6 +12,7 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
+import androidx.compose.material.icons.filled.ArrowBack
 import androidx.compose.material.icons.filled.DeleteForever
 import androidx.compose.material.icons.filled.Remove
 import androidx.compose.material.icons.filled.ShoppingCart
@@ -20,6 +21,7 @@ import androidx.compose.material3.ElevatedButton
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.FilledIconButton
 import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
 import androidx.compose.material3.IconButtonDefaults
 import androidx.compose.material3.ListItem
 import androidx.compose.material3.Scaffold
@@ -33,6 +35,7 @@ import androidx.compose.ui.unit.dp
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.rememberNavController
 import org.minutodedios.roperos.model.Subcategory
+import org.minutodedios.roperos.navigation.routes.RootNavigationRoute
 import org.minutodedios.roperos.ui.theme.ApplicationTheme
 import java.util.Locale
 
@@ -43,7 +46,9 @@ internal fun CartItems(
     shoppingCart: MutableList<CartEntry>,
 ) {
     Scaffold(topBar = {
-        TopAppBar(title = { Text(text = "Carrito de Compras") })
+        TopAppBar(title = { Text(text = "Carrito de Compras", modifier = Modifier
+            .fillMaxWidth()
+            .padding(80.dp,30.dp,0.dp,0.dp) )})
     }) { paddingValues ->
         Column(
             modifier = Modifier
@@ -134,7 +139,7 @@ internal fun CartItems(
                     Text(text = "Agregar Prendas")
                 }
 
-                ElevatedButton(onClick = { /*TODO*/ }, enabled = shoppingCart.isNotEmpty()) {
+                ElevatedButton(onClick = { navController.navigate(RootNavigationRoute.UserRoute.route) }, enabled = shoppingCart.isNotEmpty()) {
                     Icon(Icons.Filled.ShoppingCart, contentDescription = "Finish")
                     Spacer(modifier = Modifier.width(4.dp))
                     Text(text = "Finalizar")
