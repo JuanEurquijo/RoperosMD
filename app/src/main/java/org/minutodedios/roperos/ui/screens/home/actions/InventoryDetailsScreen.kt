@@ -7,6 +7,7 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.wrapContentWidth
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.CircleShape
@@ -43,8 +44,6 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.runBlocking
 import kotlinx.coroutines.withContext
 import org.minutodedios.roperos.model.Category
-import org.minutodedios.roperos.navigation.RootNavigationGraph
-import org.minutodedios.roperos.navigation.routes.RootNavigationRoute
 import org.minutodedios.roperos.services.authentication.MockAuthenticationService
 import org.minutodedios.roperos.services.database.MockDatabaseService
 import org.minutodedios.roperos.ui.state.AuthViewModel
@@ -56,11 +55,12 @@ import java.util.Locale
 @OptIn(
     ExperimentalMaterial3Api::class
 )
-fun InventoryScreen(
+fun InventoryDetailScreen(
     navController: NavHostController,
     databaseViewModel: DatabaseViewModel = hiltViewModel(),
     authViewModel: AuthViewModel = hiltViewModel(),
-    runAsync: Boolean = true
+    runAsync: Boolean = true,
+    category: String
 ) {
     val user = authViewModel.user.observeAsState()
 
@@ -72,16 +72,20 @@ fun InventoryScreen(
         if (runAsync) {
             LaunchedEffect(true) {
                 categories = withContext(Dispatchers.IO) {
-                    databaseViewModel.databaseService.inventoryForLocation(
+                    val allCategories = databaseViewModel.databaseService.inventoryForLocation(
                         user.value!!.location.id
                     )
+                    val filteredCategories = allCategories.filter { it.category == category }
+                    filteredCategories
                 }
             }
         } else {
             categories = runBlocking {
-                databaseViewModel.databaseService.inventoryForLocation(
+                val allCategories = databaseViewModel.databaseService.inventoryForLocation(
                     user.value!!.location.id
                 )
+                val filteredCategories = allCategories.filter { it.category == category }
+                filteredCategories
             }
         }
     }
@@ -90,7 +94,8 @@ fun InventoryScreen(
         Scaffold(topBar = {
             TopAppBar(title = { Text(text = "Inventario", modifier = Modifier
                 .fillMaxWidth()
-                .padding(90.dp, 30.dp, 0.dp, 0.dp) )},navigationIcon = {
+                .padding(90.dp,30.dp,0.dp,0.dp) )
+            },navigationIcon = {
                 IconButton(onClick = { navController.navigateUp() }) {
                     Icon(Icons.Filled.ArrowBack, contentDescription = "Ir atrás")
                 }
@@ -114,12 +119,9 @@ fun InventoryScreen(
 
                 categories.forEach {
                     Card(
-                        onClick = {
-                            navController.navigate("inventoryDetails/${it.category}")
-                        },
-                        modifier = Modifier
+                        Modifier
                             .fillMaxWidth()
-                            .padding(25.dp, 0.dp, 25.dp, 12.dp)
+                            .padding(25.dp,0.dp,25.dp,12.dp)
                     ) {
                         Column(
                             Modifier.padding(16.dp)
@@ -127,10 +129,36 @@ fun InventoryScreen(
                             Text(
                                 it.category.uppercase(), style = TextStyle(
                                     fontSize = 21.sp, fontWeight = FontWeight.Bold
-                                )
+                                ),
+                                modifier = Modifier.fillMaxWidth().wrapContentWidth(Alignment.CenterHorizontally)
                             )
 
                             Spacer(modifier = Modifier.height(10.dp))
+
+                            LazyColumn {
+                                items(it.subcategories) {
+                                    Box(
+                                        modifier = Modifier.padding(4.dp)
+                                    ) {
+                                        ListItem(
+                                            modifier = Modifier.clip(CircleShape),
+                                            headlineText = {
+                                                Text(text = it.subcategory.replaceFirstChar {
+                                                    if (it.isLowerCase()) it.titlecase(
+                                                        Locale.getDefault()
+                                                    ) else it.toString()
+                                                })
+                                            },
+                                            trailingContent = {
+                                                Column {
+                                                    Text(text = "Cantidad: ${it.quantity}")
+                                                    Text(text = "Precio: $${it.price}")
+                                                }
+                                            },
+                                        )
+                                    }
+                                }
+                            }
                         }
                     }
                 }
@@ -145,7 +173,7 @@ fun InventoryScreen(
 
 @Composable
 @Preview(showBackground = true)
-fun InventoryScreenPreview() {
+fun InventoryDetailScreenPreview() {
     ApplicationTheme {
         InventoryScreen(
             rememberNavController(),
