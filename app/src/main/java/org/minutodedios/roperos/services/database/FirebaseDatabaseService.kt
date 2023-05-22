@@ -6,6 +6,7 @@ import com.google.firebase.ktx.Firebase
 import kotlinx.coroutines.tasks.await
 import org.minutodedios.roperos.model.Category
 import org.minutodedios.roperos.model.Subcategory
+import java.math.BigDecimal
 
 /**
  * Proveedor de base de datos de Firebase
@@ -52,7 +53,7 @@ class FirebaseDatabaseService(
                         val content = subcategory.value as Map<String, Any>
                         Subcategory(
                             subcategory.key,
-                            (content["price"] as Number).toDouble(),
+                            BigDecimal((content["price"] as Number).toString()),
                             (content["inventory"] as Map<String, Int>)[locationId]!!
                         )
                     }

@@ -31,8 +31,9 @@ fun RootNavigationGraph(navController: NavHostController = rememberNavController
             HomeScreen(navController = navController)
         }
 
+        // Inventory details route
         composable(
-            RootNavigationRoute.InventoryDetailRoute.route+"/{category}",
+            RootNavigationRoute.InventoryDetailRoute.route + "/{category}",
             arguments = listOf(navArgument("category") { type = NavType.StringType })
         ) { backStackEntry ->
             val category = backStackEntry.arguments?.getString("category")

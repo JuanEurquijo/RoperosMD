@@ -1,4 +1,4 @@
-package org.minutodedios.roperos.ui.screens
+package org.minutodedios.roperos.ui.screens.cart
 
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Column
@@ -18,42 +18,59 @@ import androidx.compose.material3.DropdownMenuItem
 import androidx.compose.material3.ElevatedButton
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
-import androidx.compose.material3.IconButtonDefaults
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.MutableState
+import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
-import androidx.compose.runtime.saveable.rememberSaveable
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.geometry.Size
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.onGloballyPositioned
 import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.KeyboardType
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import androidx.compose.ui.unit.toSize
 import androidx.navigation.NavHostController
+import androidx.navigation.compose.rememberNavController
+import org.minutodedios.roperos.model.Client
+import org.minutodedios.roperos.ui.theme.ApplicationTheme
+
+sealed class IdTypes(val showName: String, val storeName: String) {
+    object CC : IdTypes("Cédula de Ciudadanía", "CC")
+    object TI : IdTypes("Tarjeta de Identidad", "TI")
+    object CE : IdTypes("Cédula de Extranjería", "CE")
+    object PASSPORT : IdTypes("Pasaporte", "Pasaporte")
+    object PHONE : IdTypes("Telefono", "Telefono")
+
+    companion object {
+        val allTypes: List<IdTypes>
+            get() = listOf(CC, TI, CE, PASSPORT, PHONE)
+    }
+}
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun UserRegisterScreen(navController: NavHostController) {
+fun ClientRegisterScreen(
+    navController: NavHostController = rememberNavController(),
+    onComplete: (Client?) -> Unit
+) {
 
-    val name = rememberSaveable { mutableStateOf("") }
-    val lastname = rememberSaveable { mutableStateOf("") }
-    val identifier = rememberSaveable { mutableStateOf("") }
-    val phone = rememberSaveable { mutableStateOf("") }
+    val name = remember { mutableStateOf("") }
+    val lastname = remember { mutableStateOf("") }
+    val identifier = remember { mutableStateOf("") }
+    val phone = remember { mutableStateOf("") }
 
-    val expanded = remember { mutableStateOf(false) }
-    val idTypes = listOf("Tarjeta de Identidad","Cédula de Ciudadanía","Cédula de Extranjería","Pasaporte")
-    val selectedText = rememberSaveable {mutableStateOf("") }
-    val textfieldSize  = rememberSaveable{mutableStateOf(0)}
-    val icon = if (expanded.value) Icons.Filled.KeyboardArrowUp else Icons.Filled.KeyboardArrowDown
+    var expanded by remember { mutableStateOf(false) }
+    var selectedIdType: IdTypes? by remember { mutableStateOf(null) }
+    val textfieldSize = remember { mutableStateOf(0) }
+    val icon = if (expanded) Icons.Filled.KeyboardArrowUp else Icons.Filled.KeyboardArrowDown
 
 
     Column(
@@ -85,8 +102,8 @@ fun UserRegisterScreen(navController: NavHostController) {
 
         Column(Modifier.fillMaxWidth()) {
             OutlinedTextField(
-                value = selectedText.value,
-                onValueChange = { selectedText.value = it },
+                value = selectedIdType?.showName ?: "",
+                onValueChange = { },
                 modifier = Modifier
                     .fillMaxWidth()
                     .padding(4.dp)
@@ -95,29 +112,30 @@ fun UserRegisterScreen(navController: NavHostController) {
                     },
                 label = { Text("Tipo de documento") },
                 trailingIcon = {
-                    Icon(icon,"contentDescription",
-                        Modifier.clickable { expanded.value = !expanded.value })
-                }
+                    Icon(icon, "contentDescription",
+                        Modifier.clickable { expanded = !expanded })
+                },
+                readOnly = true
             )
             DropdownMenu(
-                expanded = expanded.value,
-                onDismissRequest = { expanded.value = false },
+                expanded = expanded,
+                onDismissRequest = { expanded = false },
                 modifier = Modifier
-                    .width(with(LocalDensity.current){textfieldSize.value.toDp()})
+                    .width(with(LocalDensity.current) { textfieldSize.value.toDp() })
             ) {
-                idTypes.forEach { label ->
+                IdTypes.allTypes.forEach { entry ->
                     DropdownMenuItem(onClick = {
-                        selectedText.value = label
-                        expanded.value = false
-                    }, text = { Text(text = label) })
+                        selectedIdType = entry
+                        expanded = false
+                    }, text = { Text(text = entry.showName) })
                 }
             }
         }
 
         InputField(
             valueState = identifier,
-            labelId = "Cédula",
-            keyboardType = KeyboardType.Number
+            labelId = "Número de documento",
+            keyboardType = if (selectedIdType is IdTypes.PASSPORT) KeyboardType.Text else KeyboardType.Number
         )
 
         InputField(
@@ -128,19 +146,34 @@ fun UserRegisterScreen(navController: NavHostController) {
 
         ElevatedButton(
             modifier = Modifier.padding(top = 16.dp),
-            onClick = {  },
+            onClick = {
+                // Invoke with client
+                onComplete.invoke(
+                    Client(
+                        name.value,
+                        lastname.value,
+                        phone.value,
+                        selectedIdType!!.storeName,
+                        identifier.value
+                    )
+                )
+                navController.popBackStack()
+            },
         ) {
             Text(text = "Realizar aporte")
         }
 
         ElevatedButton(
             modifier = Modifier.padding(top = 16.dp),
-            onClick = {  },
+            onClick = {
+                // Invoke with no client
+                onComplete.invoke(null)
+                navController.popBackStack()
+            },
             colors = ButtonDefaults.buttonColors(Color.LightGray)
         ) {
-            Text(text = "Omitir",)
+            Text(text = "Omitir")
         }
-
 
     }
 }
@@ -164,4 +197,14 @@ fun InputField(
             keyboardType = keyboardType
         )
     )
+}
+
+@Preview(showBackground = true)
+@Composable
+fun ClientRegisterScreenPreview() {
+    ApplicationTheme {
+        ClientRegisterScreen {
+
+        }
+    }
 }

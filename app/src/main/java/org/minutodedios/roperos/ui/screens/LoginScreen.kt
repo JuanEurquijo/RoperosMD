@@ -264,7 +264,7 @@ fun EmailInput(
     emailState: MutableState<String>,
     labelId: String = "Correo Electrónico"
 ) {
-    InputField(
+    org.minutodedios.roperos.ui.screens.cart.InputField(
         valueState = emailState,
         labelId = labelId,
         keyboardType = KeyboardType.Email

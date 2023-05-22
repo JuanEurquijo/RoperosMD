@@ -11,12 +11,12 @@ class MockDatabaseService : IDatabaseService {
                 listOf(
                     Subcategory(
                         "chaquetas",
-                        6000.0,
+                        6000.0.toBigDecimal(),
                         10
                     ),
                     Subcategory(
                         "camisas",
-                        3000.0,
+                        3000.0.toBigDecimal(),
                         10
                     ),
                 )
@@ -26,12 +26,12 @@ class MockDatabaseService : IDatabaseService {
                 listOf(
                     Subcategory(
                         "pantalones",
-                        6000.0,
+                        6000.0.toBigDecimal(),
                         15
                     ),
                     Subcategory(
                         "camisas",
-                        12000.0,
+                        12000.0.toBigDecimal(),
                         6
                     ),
                 )

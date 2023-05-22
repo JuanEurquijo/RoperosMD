@@ -1,6 +1,7 @@
 package org.minutodedios.roperos.ui.components
 
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Card
 import androidx.compose.material3.Text
@@ -17,11 +18,12 @@ import org.minutodedios.roperos.ui.theme.ApplicationTheme
 
 @Composable
 fun LocationCard(
+    modifier: Modifier = Modifier,
     location: Location
 ) {
-    Card {
+    Card(modifier = modifier) {
         Column(
-            modifier = Modifier.padding(18.dp),
+            modifier = Modifier.fillMaxWidth().padding(18.dp),
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
             Text(
@@ -37,6 +39,6 @@ fun LocationCard(
 @Preview
 fun LocationCardPreview() {
     ApplicationTheme {
-        LocationCard(location = Location("lorem_ipsum", "Lorem", "Ipsum"))
+        LocationCard(location = Location("lorem_ipsum", "Lorem", "Ipsum", 0))
     }
 }

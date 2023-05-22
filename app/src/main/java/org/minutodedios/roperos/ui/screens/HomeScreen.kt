@@ -3,18 +3,20 @@ package org.minutodedios.roperos.ui.screens
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.lazy.grid.GridCells
-import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
-import androidx.compose.foundation.lazy.grid.items
+import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.verticalScroll
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.WavingHand
 import androidx.compose.material3.CircularProgressIndicator
-import androidx.compose.material3.ElevatedButton
 import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.Icon
+import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
+import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.ui.Alignment
@@ -49,55 +51,69 @@ fun HomeScreen(
         }
     } else {
 
+        // Mostrar información del usuario
         Column(
-            modifier = Modifier.fillMaxSize(), horizontalAlignment = Alignment.CenterHorizontally
+            modifier = Modifier
+                .fillMaxSize()
+                .padding(horizontal = 32.dp)
+                .padding(top = 32.dp),
+            horizontalAlignment = Alignment.CenterHorizontally
         ) {
-            Column(
-                modifier = Modifier.padding(32.dp), horizontalAlignment = Alignment.Start
+            Row(
+                modifier = Modifier.fillMaxWidth(),
+                horizontalArrangement = Arrangement.SpaceBetween,
+                verticalAlignment = Alignment.CenterVertically
             ) {
-                Row(
-                    modifier = Modifier.fillMaxWidth(),
-                    horizontalArrangement = Arrangement.SpaceBetween
-                ) {
-                    // Show user information
-                    Column {
-                        Text(
-                            text = "Bienvenido\n${user.value!!.fullname}",
-                            style = TextStyle(
-                                fontSize = 21.sp,
-                                fontWeight = FontWeight.Medium,
-                                textAlign = TextAlign.Left,
-                            ),
+                // Información del Usuario
+                Column {
+                    Text(
+                        text = "Bienvenido\n${user.value!!.fullname}",
+                        style = TextStyle(
+                            fontSize = 21.sp,
+                            fontWeight = FontWeight.Medium,
+                            textAlign = TextAlign.Left,
+                        ),
+                    )
+                    Text(
+                        text = user.value!!.email,
+                        style = TextStyle(
+                            fontSize = 14.sp,
                         )
-                        Text(
-                            text = user.value!!.email,
-                            style = TextStyle(
-                                fontSize = 14.sp,
-                            )
-                        )
-                    }
-
-                    // Show location card
-                    LocationCard(location = user.value!!.location)
+                    )
                 }
 
-                ElevatedButton(
-                    modifier = Modifier.padding(top = 16.dp),
+                TextButton(
                     onClick = { authViewModel.authService.logout() },
                 ) {
                     Text(text = "Cerrar Sesión")
+                    Icon(
+                        Icons.Filled.WavingHand,
+                        contentDescription = "Cerrar Sesión",
+                        modifier = Modifier.padding(start = 12.dp)
+                    )
                 }
             }
 
-            // Mostrar las opciones
-            LazyVerticalGrid(
-                columns = GridCells.Fixed(2),
-                contentPadding = PaddingValues(25.dp),
-                verticalArrangement = Arrangement.spacedBy(8.dp),
-                horizontalArrangement = Arrangement.spacedBy(8.dp)
+            // Mostrar ropero
+            LocationCard(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(vertical = 16.dp),
+                location = user.value!!.location
+            )
+
+            // Mostrar items del menú
+            Column(
+                modifier = Modifier
+                    .padding(horizontal = 32.dp)
+                    .verticalScroll(
+                        rememberScrollState()
+                    )
             ) {
-                items(ActionsNavigationRoute.values()) {
-                    ActionMenuItem(navController = navController, item = it)
+                ActionsNavigationRoute.values().forEach {
+                    Surface(modifier = Modifier.padding(vertical = 8.dp)) {
+                        ActionMenuItem(navController = navController, item = it)
+                    }
                 }
             }
         }

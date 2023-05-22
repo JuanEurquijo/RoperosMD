@@ -10,10 +10,12 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
-import androidx.compose.material.icons.filled.ArrowBack
 import androidx.compose.material.icons.filled.DeleteForever
+import androidx.compose.material.icons.filled.Percent
 import androidx.compose.material.icons.filled.Remove
 import androidx.compose.material.icons.filled.ShoppingCart
 import androidx.compose.material3.Badge
@@ -21,34 +23,39 @@ import androidx.compose.material3.ElevatedButton
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.FilledIconButton
 import androidx.compose.material3.Icon
-import androidx.compose.material3.IconButton
 import androidx.compose.material3.IconButtonDefaults
 import androidx.compose.material3.ListItem
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.text.TextStyle
+import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.rememberNavController
 import org.minutodedios.roperos.model.Subcategory
-import org.minutodedios.roperos.navigation.routes.RootNavigationRoute
 import org.minutodedios.roperos.ui.theme.ApplicationTheme
-import java.util.Locale
+import java.math.BigDecimal
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 internal fun CartItems(
     navController: NavHostController,
     shoppingCart: MutableList<CartEntry>,
+    onFinish: () -> Unit
 ) {
     Scaffold(topBar = {
-        TopAppBar(title = { Text(text = "Carrito de Compras", modifier = Modifier
-            .fillMaxWidth()
-            .padding(80.dp,30.dp,0.dp,0.dp) )})
+        TopAppBar(title = {
+            Text(
+                text = "Carrito de Compras", textAlign = TextAlign.Center
+            )
+        })
     }) { paddingValues ->
         Column(
             modifier = Modifier
@@ -57,6 +64,7 @@ internal fun CartItems(
         ) {
             Column(
                 modifier = Modifier
+                    .verticalScroll(rememberScrollState())
                     .fillMaxWidth()
                     .weight(1f),
                 horizontalAlignment = Alignment.CenterHorizontally,
@@ -64,7 +72,7 @@ internal fun CartItems(
                     Arrangement.Center
                 } else {
                     Arrangement.Top
-                }
+                },
             ) {
                 if (shoppingCart.isEmpty()) {
                     Icon(
@@ -75,21 +83,63 @@ internal fun CartItems(
                     Text("No hay elementos")
                 } else {
                     shoppingCart.forEachIndexed { index, item ->
-                        ListItem(
+                        ListItem(modifier = Modifier.padding(0.dp),
+                            overlineText = { Text("Disponibles: ${item.subcategory.quantity}") },
                             headlineText = {
-                                Text(item.subcategory.subcategory.capitalize(Locale.ROOT))
+                                Text("(${item.category.capitalize()}) ${item.subcategory.subcategory.capitalize()}")
                             },
-                            supportingText = { Text(item.category.capitalize(Locale.ROOT)) },
-                            overlineText = { Text("Cantidad Disponible: ${item.subcategory.quantity}") },
-                            leadingContent = {
-                                FilledIconButton(
-                                    onClick = {
-                                        shoppingCart.remove(item)
-                                    },
-                                    colors = IconButtonDefaults.filledTonalIconButtonColors()
-                                ) {
-                                    Icon(Icons.Filled.DeleteForever, contentDescription = null)
+                            supportingText = {
+                                Column {
+                                    Text("Unidad: ${item.subcategory.price.toPlainString()}")
+                                    if (item.discount > BigDecimal.ZERO) {
+                                        Text(
+                                            text = "Descuento: ${(item.discount * 100.0.toBigDecimal()).toInt()}%",
+                                            style = TextStyle(
+                                                color = MaterialTheme.colorScheme.secondary,
+                                                fontWeight = FontWeight.Bold
+                                            )
+                                        )
+                                    }
+                                    Text(
+                                        "Total: ${item.price.toPlainString()}",
+                                        style = TextStyle(fontWeight = FontWeight.Bold)
+                                    )
                                 }
+                            },
+                            leadingContent = {
+                                Row {
+                                    FilledIconButton(
+                                        colors = IconButtonDefaults.filledTonalIconButtonColors(),
+                                        onClick = {
+                                            shoppingCart.remove(item)
+                                        },
+                                    ) {
+                                        Icon(
+                                            Icons.Filled.DeleteForever,
+                                            contentDescription = "Eliminar producto"
+                                        )
+                                    }
+
+                                    // Discount
+                                    FilledIconButton(
+                                        colors = IconButtonDefaults.filledIconButtonColors(
+                                            containerColor = MaterialTheme.colorScheme.secondary,
+                                        ),
+                                        onClick = {
+                                            navController.navigate(
+                                                ShoppingCartRoutes.CartDiscount.routeOfIndex(
+                                                    index
+                                                )
+                                            )
+                                        },
+                                    ) {
+                                        Icon(
+                                            Icons.Filled.Percent,
+                                            contentDescription = "Agregar descuento"
+                                        )
+                                    }
+                                }
+
                             },
                             trailingContent = {
                                 Row(
@@ -100,10 +150,11 @@ internal fun CartItems(
                                             // Remove one Item
                                             shoppingCart[index] =
                                                 item.copy(quantity = item.quantity - 1)
-                                        },
-                                        enabled = item.quantity > 1
+                                        }, enabled = item.quantity > 1
                                     ) {
-                                        Icon(Icons.Filled.Remove, contentDescription = null)
+                                        Icon(
+                                            Icons.Filled.Remove, contentDescription = "Eliminar uno"
+                                        )
                                     }
 
                                     Badge(modifier = Modifier.height(32.dp)) {
@@ -115,12 +166,10 @@ internal fun CartItems(
                                             // Add one item
                                             shoppingCart[index] =
                                                 item.copy(quantity = item.quantity + 1)
-                                        },
-                                        enabled = item.quantity < item.subcategory.quantity
+                                        }, enabled = item.quantity < item.subcategory.quantity
                                     ) {
-                                        Icon(Icons.Filled.Add, contentDescription = null)
+                                        Icon(Icons.Filled.Add, contentDescription = "Agregar otro")
                                     }
-
                                 }
                             })
                     }
@@ -139,7 +188,12 @@ internal fun CartItems(
                     Text(text = "Agregar Prendas")
                 }
 
-                ElevatedButton(onClick = { navController.navigate(RootNavigationRoute.UserRoute.route) }, enabled = shoppingCart.isNotEmpty()) {
+                ElevatedButton(
+                    onClick = {
+                        onFinish.invoke()
+                    },
+                    enabled = shoppingCart.isNotEmpty()
+                ) {
                     Icon(Icons.Filled.ShoppingCart, contentDescription = "Finish")
                     Spacer(modifier = Modifier.width(4.dp))
                     Text(text = "Finalizar")
@@ -154,7 +208,9 @@ internal fun CartItems(
 fun ShoppingCartHomeEmptyPreview() {
     ApplicationTheme {
         CartItems(
-            navController = rememberNavController(), shoppingCart = mutableListOf()
+            navController = rememberNavController(),
+            shoppingCart = mutableListOf(),
+            onFinish = {}
         )
     }
 }
@@ -165,9 +221,19 @@ fun ShoppingCartHomeFilledPreview() {
     ApplicationTheme {
         CartItems(
             navController = rememberNavController(), shoppingCart = mutableListOf(
-                CartEntry("Lorem", Subcategory("Ipsum", 2000.0, 10), 3),
-                CartEntry("Ipsum", Subcategory("Dolor", 3000.0, 5), 5)
-            )
+                CartEntry(
+                    "Lorem", Subcategory("Ipsum", 2000.0.toBigDecimal(), 10), 3, 0.25.toBigDecimal()
+                ),
+                CartEntry("Ipsum", Subcategory("Dolor", 3000.0.toBigDecimal(), 5), 5),
+                CartEntry("Ipsum", Subcategory("Dolor", 3000.0.toBigDecimal(), 5), 5),
+                CartEntry("Ipsum", Subcategory("Dolor", 3000.0.toBigDecimal(), 5), 5),
+                CartEntry("Ipsum", Subcategory("Dolor", 3000.0.toBigDecimal(), 5), 5),
+                CartEntry("Ipsum", Subcategory("Dolor", 3000.0.toBigDecimal(), 5), 5),
+                CartEntry("Ipsum", Subcategory("Dolor", 3000.0.toBigDecimal(), 5), 5),
+                CartEntry("Ipsum", Subcategory("Dolor", 3000.0.toBigDecimal(), 5), 5),
+                CartEntry("Ipsum", Subcategory("Dolor", 3000.0.toBigDecimal(), 5), 5),
+            ),
+            onFinish = {}
         )
     }
 }

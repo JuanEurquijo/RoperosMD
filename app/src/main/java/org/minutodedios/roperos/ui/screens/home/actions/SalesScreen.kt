@@ -1,5 +1,6 @@
 package org.minutodedios.roperos.ui.screens.home.actions
 
+import android.util.Log
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.material3.CircularProgressIndicator
@@ -31,7 +32,7 @@ import org.minutodedios.roperos.ui.theme.ApplicationTheme
 
 @Composable
 fun SalesScreen(
-    navController: NavHostController,
+    navController: NavHostController = rememberNavController(),
     databaseViewModel: DatabaseViewModel = hiltViewModel(),
     authViewModel: AuthViewModel = hiltViewModel(),
     runAsync: Boolean = true
@@ -69,7 +70,16 @@ fun SalesScreen(
         ShoppingCart(
             shoppingCart = shoppingCart,
             categories = categories
-        )
+        ) { products, client, contribution ->
+            Log.d(
+                "ShoppingFinished", "SalesScreen: [${
+                    products.fold("") { p, c ->
+                        "$p, $c"
+                    }
+                }] with $client and $contribution"
+            );
+            navController.popBackStack()
+        }
     } else {
         Box(modifier = Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
             CircularProgressIndicator()

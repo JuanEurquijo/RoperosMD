@@ -3,23 +3,30 @@ package org.minutodedios.roperos.ui.screens.cart
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.navigation.NavHostController
+import androidx.navigation.NavType
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
+import androidx.navigation.navArgument
 import kotlinx.coroutines.runBlocking
 import org.minutodedios.roperos.model.Category
+import org.minutodedios.roperos.model.Client
+import org.minutodedios.roperos.model.Contribution
+import org.minutodedios.roperos.model.Product
 import org.minutodedios.roperos.navigation.routes.RootNavigationRoute
 import org.minutodedios.roperos.services.database.MockDatabaseService
-import org.minutodedios.roperos.ui.screens.HomeScreen
-import org.minutodedios.roperos.ui.screens.UserRegisterScreen
 import org.minutodedios.roperos.ui.theme.ApplicationTheme
 
-internal enum class ShoppingCartRoutes(
+internal sealed class ShoppingCartRoutes(
     val route: String
 ) {
-    Initial("initial"),
-    AddToCart("addToCart"),
-    UserRegister("user")
+    object Initial : ShoppingCartRoutes("initial")
+    object AddToCart : ShoppingCartRoutes("addToCart")
+    object CartDiscount : ShoppingCartRoutes("cartDiscount/{indexOfItem}") {
+        fun routeOfIndex(index: Int): String = "cartDiscount/$index"
+    }
+
+    object UserRegister : ShoppingCartRoutes("user")
 }
 
 @Composable
@@ -27,7 +34,11 @@ fun ShoppingCart(
     navController: NavHostController = rememberNavController(),
     shoppingCart: MutableList<CartEntry>,
     categories: List<Category>,
+    onComplete: (List<Product>, Client?, Contribution) -> Unit,
 ) {
+    var products: List<Product> = listOf()
+    var client: Client? = null
+
     NavHost(
         navController = navController,
         route = RootNavigationRoute.CartRoute.route,
@@ -37,7 +48,13 @@ fun ShoppingCart(
             CartItems(
                 navController = navController,
                 shoppingCart = shoppingCart,
-            )
+            ) {
+                // Productos
+                products = shoppingCart.map { Product(it) }
+
+                // Go to user route
+                navController.navigate(ShoppingCartRoutes.UserRegister.route)
+            }
         }
 
         composable(ShoppingCartRoutes.AddToCart.route) {
@@ -58,8 +75,30 @@ fun ShoppingCart(
                 }
             }
         }
-        composable(ShoppingCartRoutes.UserRegister.route){
-            UserRegisterScreen(navController = navController)
+
+        composable(
+            ShoppingCartRoutes.CartDiscount.route,
+            arguments = listOf(navArgument("indexOfItem") { type = NavType.IntType })
+        ) {
+            val entry = it.arguments?.getInt("indexOfItem");
+            if (entry != null && shoppingCart.size > entry) {
+                CartDiscount(
+                    navHostController = navController,
+                    product = Product(shoppingCart[entry])
+                ) { discount ->
+                    // Copy with new discount value
+                    shoppingCart[entry] = shoppingCart[entry].copy(discount = discount)
+                }
+            }
+        }
+
+        composable(ShoppingCartRoutes.UserRegister.route) {
+            ClientRegisterScreen(navController = navController) {
+                // Configurar el cliente
+                client = it
+
+                //TODO: Ventana de ventas
+            }
         }
     }
 }
@@ -70,6 +109,7 @@ fun ShoppingCartPreview() {
     ApplicationTheme {
         ShoppingCart(
             shoppingCart = mutableListOf(),
-            categories = runBlocking { MockDatabaseService().inventoryForLocation("") })
+            categories = runBlocking { MockDatabaseService().inventoryForLocation("") }) { _, _, _ ->
+        }
     }
 }
