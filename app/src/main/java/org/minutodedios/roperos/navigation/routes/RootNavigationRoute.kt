@@ -5,5 +5,6 @@ enum class RootNavigationRoute(val route: String) {
     HomeRoute("home"),
     CartRoute("cart"),
     UserRoute("user"),
-    InventoryDetailRoute("inventoryDetails")
+    InventoryDetailRoute("inventoryDetails"),
+    EntryDetailRoute("entryDetails")
 }

@@ -11,6 +11,8 @@ import org.minutodedios.roperos.navigation.routes.ActionsNavigationRoute
 import org.minutodedios.roperos.navigation.routes.RootNavigationRoute
 import org.minutodedios.roperos.ui.screens.FallbackScreen
 import org.minutodedios.roperos.ui.screens.HomeScreen
+import org.minutodedios.roperos.ui.screens.home.actions.EntryDetailScreen
+import org.minutodedios.roperos.ui.screens.home.actions.EntryScreen
 import org.minutodedios.roperos.ui.screens.home.actions.InventoryDetailScreen
 import org.minutodedios.roperos.ui.screens.home.actions.InventoryScreen
 import org.minutodedios.roperos.ui.screens.home.actions.SalesScreen
@@ -42,6 +44,17 @@ fun RootNavigationGraph(navController: NavHostController = rememberNavController
             }
         }
 
+        // Entry details route
+        composable(
+            RootNavigationRoute.EntryDetailRoute.route + "/{category}",
+            arguments = listOf(navArgument("category") { type = NavType.StringType })
+        ) { backStackEntry ->
+            val category = backStackEntry.arguments?.getString("category")
+            if (category != null) {
+                EntryDetailScreen(navController = navController, category = category)
+            }
+        }
+
         /* -- Actions -- */
 
         composable(ActionsNavigationRoute.InventoryRoute.route) {
@@ -50,6 +63,10 @@ fun RootNavigationGraph(navController: NavHostController = rememberNavController
 
         composable(ActionsNavigationRoute.OutRoute.route) {
             SalesScreen(navController = navController)
+        }
+
+        composable(ActionsNavigationRoute.InRoute.route) {
+            EntryScreen(navController = navController)
         }
 
         /* -- Others -- */

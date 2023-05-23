@@ -85,7 +85,7 @@ fun HomeScreen(
                 TextButton(
                     onClick = { authViewModel.authService.logout() },
                 ) {
-                    Text(text = "Cerrar Sesión")
+                    Text(text = "Cerrar Sesión", textAlign = TextAlign.Center)
                     Icon(
                         Icons.Filled.WavingHand,
                         contentDescription = "Cerrar Sesión",
