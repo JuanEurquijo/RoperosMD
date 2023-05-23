@@ -1,23 +1,18 @@
 package org.minutodedios.roperos.ui.screens.cart
 
 import androidx.compose.runtime.Composable
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.navigation.NavHostController
 import androidx.navigation.NavType
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import androidx.navigation.navArgument
-import kotlinx.coroutines.runBlocking
 import org.minutodedios.roperos.model.Category
 import org.minutodedios.roperos.model.Client
 import org.minutodedios.roperos.model.Contribution
 import org.minutodedios.roperos.model.Product
 import org.minutodedios.roperos.navigation.RootNavigationGraph
 import org.minutodedios.roperos.navigation.routes.RootNavigationRoute
-import org.minutodedios.roperos.services.database.MockDatabaseService
-import org.minutodedios.roperos.ui.screens.HomeScreen
-import org.minutodedios.roperos.ui.theme.ApplicationTheme
 
 internal sealed class ShoppingCartRoutes(
     val route: String
@@ -100,30 +95,27 @@ fun ShoppingCart(
                 // Configurar el cliente
                 client = it
 
-                //TODO: Ventana de ventas
+                //Navegar a la ventana de venta
+                navController.navigate(ShoppingCartRoutes.Summary.route)
             }
         }
 
         composable(ShoppingCartRoutes.Summary.route) {
             SummaryScreen(
                 navController = navController,
-                products = products)
+                products = products
+            ) { contribution ->
+                // Call completion
+                onComplete.invoke(
+                    products,
+                    client,
+                    contribution
+                )
+            }
         }
 
         composable(RootNavigationRoute.HomeRoute.route) {
-           RootNavigationGraph()
-        }
-    }
-}
-
-
-@Preview
-@Composable
-fun ShoppingCartPreview() {
-    ApplicationTheme {
-        ShoppingCart(
-            shoppingCart = mutableListOf(),
-            categories = runBlocking { MockDatabaseService().inventoryForLocation("") }) { _, _, _ ->
+            RootNavigationGraph()
         }
     }
 }

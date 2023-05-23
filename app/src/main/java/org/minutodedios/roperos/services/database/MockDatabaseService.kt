@@ -1,6 +1,7 @@
 package org.minutodedios.roperos.services.database
 
 import org.minutodedios.roperos.model.Category
+import org.minutodedios.roperos.model.Sale
 import org.minutodedios.roperos.model.Subcategory
 
 class MockDatabaseService : IDatabaseService {
@@ -44,6 +45,10 @@ class MockDatabaseService : IDatabaseService {
         locationId: String,
         newQuantity: Int
     ) {
+        TODO("Not yet implemented")
+    }
+
+    override suspend fun makeSale(sale: Sale) {
         TODO("Not yet implemented")
     }
 }

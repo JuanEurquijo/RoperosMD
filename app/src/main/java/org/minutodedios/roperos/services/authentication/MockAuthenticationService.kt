@@ -18,7 +18,7 @@ class MockAuthenticationService(
         if (initAsAuthenticated) {
             _currentUser = User(
                 "hello@word.com", "Lorem",
-                Location("lorem_ipsum", "Ipsum", "Dolor", 0)
+                Location("lorem_ipsum", "Ipsum", "Dolor")
             )
         }
     }
@@ -30,7 +30,7 @@ class MockAuthenticationService(
     override fun login(email: String, password: String, onResult: (Boolean) -> Unit) {
         _currentUser = User(
             email, "Lorem",
-            Location("lorem_ipsum", "Ipsum", "Dolor", 0)
+            Location("lorem_ipsum", "Ipsum", "Dolor")
         )
     }
 

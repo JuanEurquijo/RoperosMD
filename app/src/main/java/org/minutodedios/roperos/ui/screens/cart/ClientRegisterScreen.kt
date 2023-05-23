@@ -1,6 +1,5 @@
 package org.minutodedios.roperos.ui.screens.cart
 
-import android.widget.Toast
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
@@ -31,7 +30,6 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.onGloballyPositioned
-import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
@@ -42,7 +40,6 @@ import androidx.compose.ui.unit.sp
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.rememberNavController
 import org.minutodedios.roperos.model.Client
-import org.minutodedios.roperos.navigation.routes.RootNavigationRoute
 import org.minutodedios.roperos.ui.theme.ApplicationTheme
 
 sealed class IdTypes(val showName: String, val storeName: String) {
@@ -159,7 +156,6 @@ fun ClientRegisterScreen(
                         identifier.value
                     )
                 )
-                navController.popBackStack()
             },
         ) {
             Text(text = "Realizar aporte")
@@ -170,7 +166,6 @@ fun ClientRegisterScreen(
             onClick = {
                 // Invoke with no client
                 onComplete.invoke(null)
-                navController.navigate(ShoppingCartRoutes.Summary.route)
             },
             colors = ButtonDefaults.buttonColors(Color.LightGray)
         ) {

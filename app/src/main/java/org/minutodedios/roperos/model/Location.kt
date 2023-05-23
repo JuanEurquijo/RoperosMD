@@ -10,5 +10,4 @@ data class Location(
     val id: String,
     val city: String,
     val name: String,
-    val consecutive: Int,
 )

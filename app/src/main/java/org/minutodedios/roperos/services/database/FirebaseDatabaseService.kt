@@ -4,8 +4,13 @@ import android.util.Log
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.firestore.ktx.firestore
 import com.google.firebase.ktx.Firebase
+import com.google.gson.Gson
+import com.google.gson.reflect.TypeToken
 import kotlinx.coroutines.tasks.await
+import kotlinx.serialization.encodeToString
+import kotlinx.serialization.json.Json
 import org.minutodedios.roperos.model.Category
+import org.minutodedios.roperos.model.Sale
 import org.minutodedios.roperos.model.Subcategory
 import java.math.BigDecimal
 
@@ -66,7 +71,12 @@ class FirebaseDatabaseService(
             )
         }
 
-    override suspend fun updateSubcategoryQuantity(categoryId: String, locationId: String,subcategoryId: String, newQuantity: Int) {
+    override suspend fun updateSubcategoryQuantity(
+        categoryId: String,
+        locationId: String,
+        subcategoryId: String,
+        newQuantity: Int
+    ) {
         val categoryRef = database.collection("inventory").document(categoryId)
         val categorySnapshot = categoryRef.get().await()
 
@@ -89,14 +99,20 @@ class FirebaseDatabaseService(
 
                     categoryRef.update("subcategories", updatedSubcategoriesMap)
                         .addOnSuccessListener {
-                            Log.d("SUCCESS","Actualización realizada correctamente")
+                            Log.d("SUCCESS", "Actualización realizada correctamente")
                         }
                         .addOnFailureListener { e ->
-                            Log.d("ERROR","Ocurrió un error en la actualizaciòn")
+                            Log.d("ERROR", "Ocurrió un error en la actualizaciòn")
                         }
                 }
             }
         }
+    }
+
+    override suspend fun makeSale(sale: Sale) {
+        val json = Json.encodeToString(sale)
+        val serializedSale = Gson().fromJson<Map<String, Any>>(json, object : TypeToken<Map<String?, Any?>?>() {}.type)
+        database.collection("sales").add(serializedSale).await()
     }
 
 

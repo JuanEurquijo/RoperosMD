@@ -39,6 +39,6 @@ fun LocationCard(
 @Preview
 fun LocationCardPreview() {
     ApplicationTheme {
-        LocationCard(location = Location("lorem_ipsum", "Lorem", "Ipsum", 0))
+        LocationCard(location = Location("lorem_ipsum", "Lorem", "Ipsum"))
     }
 }
