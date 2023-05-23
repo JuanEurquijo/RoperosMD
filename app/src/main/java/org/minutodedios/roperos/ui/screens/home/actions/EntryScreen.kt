@@ -7,9 +7,6 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.foundation.lazy.items
-import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowBack
 import androidx.compose.material3.Card
@@ -17,7 +14,6 @@ import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
-import androidx.compose.material3.ListItem
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
@@ -30,7 +26,6 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.clip
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
@@ -44,23 +39,21 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.runBlocking
 import kotlinx.coroutines.withContext
 import org.minutodedios.roperos.model.Category
-import org.minutodedios.roperos.navigation.RootNavigationGraph
-import org.minutodedios.roperos.navigation.routes.RootNavigationRoute
 import org.minutodedios.roperos.services.authentication.MockAuthenticationService
 import org.minutodedios.roperos.services.database.MockDatabaseService
 import org.minutodedios.roperos.ui.state.AuthViewModel
 import org.minutodedios.roperos.ui.state.DatabaseViewModel
 import org.minutodedios.roperos.ui.theme.ApplicationTheme
-import java.util.Locale
 
-@Composable
 @OptIn(ExperimentalMaterial3Api::class)
-fun InventoryScreen(
+@Composable
+fun EntryScreen(
     navController: NavHostController,
     databaseViewModel: DatabaseViewModel = hiltViewModel(),
     authViewModel: AuthViewModel = hiltViewModel(),
     runAsync: Boolean = true
 ) {
+
     val user = authViewModel.user.observeAsState()
 
     var categories: List<Category> by remember {
@@ -87,9 +80,10 @@ fun InventoryScreen(
 
     if (user.value != null && categories.isNotEmpty()) {
         Scaffold(topBar = {
-            TopAppBar(title = { Text(text = "Inventario",modifier = Modifier
+            TopAppBar(title = { Text(text = "Ingreso de prendas", textAlign = TextAlign.Center, modifier = Modifier
                 .fillMaxWidth()
-                .padding(90.dp,30.dp,0.dp,0.dp) )},navigationIcon = {
+                .padding(0.dp, 30.dp, 40.dp, 0.dp))
+            },navigationIcon = {
                 IconButton(onClick = { navController.navigateUp() }) {
                     Icon(Icons.Filled.ArrowBack, contentDescription = "Ir atrás")
                 }
@@ -100,7 +94,7 @@ fun InventoryScreen(
             ) {
                 Column(modifier = Modifier.padding(32.dp)) {
                     Text(
-                        "Estas consultando el inventario del ropero:",
+                        "Harás ingreso de prendas al ropero:",
                     )
                     Text(
                         user.value!!.location.name, style = TextStyle(
@@ -114,7 +108,7 @@ fun InventoryScreen(
                 categories.forEach {
                     Card(
                         onClick = {
-                            navController.navigate("inventoryDetails/${it.category}")
+                            navController.navigate("entryDetails/${it.category}")
                         },
                         modifier = Modifier
                             .fillMaxWidth()
@@ -140,11 +134,12 @@ fun InventoryScreen(
             CircularProgressIndicator()
         }
     }
+
 }
 
 @Composable
 @Preview(showBackground = true)
-fun InventoryScreenPreview() {
+fun EntryScreenPreview() {
     ApplicationTheme {
         InventoryScreen(
             rememberNavController(),
