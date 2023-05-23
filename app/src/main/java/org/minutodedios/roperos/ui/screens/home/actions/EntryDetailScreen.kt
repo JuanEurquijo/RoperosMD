@@ -23,6 +23,7 @@ import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.ListItem
+import androidx.compose.material3.LocalTextStyle
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
@@ -264,11 +265,12 @@ fun InputField(
             valueState.value = it.toIntOrNull() ?: 0
         },
         modifier = Modifier
-            .width(90.dp)
+            .width(60.dp)
             .height(48.dp),
         keyboardOptions = KeyboardOptions(
             keyboardType = keyboardType
-        )
+        ),
+        textStyle = LocalTextStyle.current.copy(fontSize = 14.sp)
     )
 }
 

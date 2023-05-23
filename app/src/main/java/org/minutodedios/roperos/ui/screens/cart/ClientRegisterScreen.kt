@@ -1,5 +1,6 @@
 package org.minutodedios.roperos.ui.screens.cart
 
+import android.widget.Toast
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
@@ -30,6 +31,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.onGloballyPositioned
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
@@ -61,6 +63,7 @@ fun ClientRegisterScreen(
     navController: NavHostController = rememberNavController(),
     onComplete: (Client?) -> Unit
 ) {
+    val context = LocalContext.current
     val name = remember { mutableStateOf("") }
     val lastname = remember { mutableStateOf("") }
     val identifier = remember { mutableStateOf("") }
@@ -147,18 +150,25 @@ fun ClientRegisterScreen(
             modifier = Modifier.padding(top = 16.dp),
             onClick = {
                 // Invoke with client
-                onComplete.invoke(
-                    Client(
-                        name.value,
-                        lastname.value,
-                        phone.value,
-                        selectedIdType!!.storeName,
-                        identifier.value
+                if (
+                    phone.value.isEmpty() && identifier.value.isEmpty()
+                ) {
+                    Toast.makeText(context, "Para registrar el aportante debes llenar al menos la cédula o el teléfono", Toast.LENGTH_SHORT).show()
+                } else {
+                    val idType = selectedIdType?.storeName ?: ""
+                    onComplete.invoke(
+                        Client(
+                            name.value,
+                            lastname.value,
+                            phone.value,
+                            idType,
+                            identifier.value
+                        )
                     )
-                )
+                }
             },
         ) {
-            Text(text = "Realizar aporte")
+            Text(text = "Registrar aportante")
         }
 
         ElevatedButton(
