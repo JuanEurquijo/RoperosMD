@@ -13,8 +13,10 @@ import org.minutodedios.roperos.model.Category
 import org.minutodedios.roperos.model.Client
 import org.minutodedios.roperos.model.Contribution
 import org.minutodedios.roperos.model.Product
+import org.minutodedios.roperos.navigation.RootNavigationGraph
 import org.minutodedios.roperos.navigation.routes.RootNavigationRoute
 import org.minutodedios.roperos.services.database.MockDatabaseService
+import org.minutodedios.roperos.ui.screens.HomeScreen
 import org.minutodedios.roperos.ui.theme.ApplicationTheme
 
 internal sealed class ShoppingCartRoutes(
@@ -27,6 +29,7 @@ internal sealed class ShoppingCartRoutes(
     }
 
     object UserRegister : ShoppingCartRoutes("user")
+    object Summary : ShoppingCartRoutes("summary")
 }
 
 @Composable
@@ -100,8 +103,19 @@ fun ShoppingCart(
                 //TODO: Ventana de ventas
             }
         }
+
+        composable(ShoppingCartRoutes.Summary.route) {
+            SummaryScreen(
+                navController = navController,
+                products = products)
+        }
+
+        composable(RootNavigationRoute.HomeRoute.route) {
+           RootNavigationGraph()
+        }
     }
 }
+
 
 @Preview
 @Composable
