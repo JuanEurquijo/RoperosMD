@@ -37,12 +37,14 @@ import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.livedata.observeAsState
+import androidx.compose.runtime.mutableStateMapOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.KeyboardType
@@ -51,9 +53,11 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.lifecycle.viewModelScope
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.rememberNavController
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
 import kotlinx.coroutines.runBlocking
 import kotlinx.coroutines.withContext
 import org.minutodedios.roperos.model.Category
@@ -75,13 +79,14 @@ fun EntryDetailScreen(
     runAsync: Boolean = true,
     category: String
 ) {
+    val context = LocalContext.current
     val user = authViewModel.user.observeAsState()
 
     var categories: List<Category> by remember {
         mutableStateOf(listOf())
     }
 
-    val quantityMap = remember { mutableStateOf(emptyMap<String, Int>()) }
+    val quantityMap = remember { mutableStateMapOf<String, Int>() }
 
     if (user.value != null) {
         if (runAsync) {
@@ -141,8 +146,22 @@ fun EntryDetailScreen(
                     ElevatedButton(
                         modifier = Modifier.padding(16.dp),
                         onClick = {
-                            Log.d("INFO", quantityMap.value.toString())
-                            //TODO: Guardar en base de datos
+                            val job =  databaseViewModel.viewModelScope.launch {
+                                quantityMap.forEach { (key, value) ->
+                                    databaseViewModel.databaseService.updateSubcategoryQuantity(
+                                        category,
+                                        user.value!!.location.id,
+                                        key,
+                                        value
+                                    )
+                                }
+                            }
+                            job.invokeOnCompletion {
+                                if (it == null) {
+                                    navController.navigate(RootNavigationRoute.HomeRoute.route)
+                                    Toast.makeText(context, "Ingreso de prendas exitoso", Toast.LENGTH_SHORT).show()
+                                }
+                            }
                         },
                     ) {
                         Text(text = "Guardar Datos")
@@ -170,11 +189,7 @@ fun EntryDetailScreen(
 
                             LazyColumn {
                                 items(it.subcategories) {
-                                    val quantityState = remember {
-                                        mutableStateOf(
-                                            quantityMap.value[it.subcategory] ?: 0
-                                        )
-                                    }
+                                    val quantityState = remember { mutableStateOf(quantityMap[it.subcategory] ?: 0) }
                                     Box(
                                         modifier = Modifier.padding(4.dp)
                                     ) {
@@ -197,10 +212,11 @@ fun EntryDetailScreen(
                                             },
                                         )
                                     }
-                                    DisposableEffect(quantityState.value) {
-                                        onDispose {
-                                            quantityMap.value =
-                                                quantityMap.value + (it.subcategory to quantityState.value)
+                                    val previousValue = remember { mutableStateOf(quantityState.value) }
+                                    LaunchedEffect(quantityState.value) {
+                                        if (quantityState.value != previousValue.value) {
+                                            quantityMap[it.subcategory] = it.quantity+quantityState.value
+                                            previousValue.value = it.quantity+quantityState.value
                                         }
                                     }
                                 }

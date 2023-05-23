@@ -37,4 +37,13 @@ class MockDatabaseService : IDatabaseService {
                 )
             )
         )
+
+    override suspend fun updateSubcategoryQuantity(
+        categoryId: String,
+        subcategoryId: String,
+        locationId: String,
+        newQuantity: Int
+    ) {
+        TODO("Not yet implemented")
+    }
 }

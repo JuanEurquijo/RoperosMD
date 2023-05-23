@@ -1,5 +1,6 @@
 package org.minutodedios.roperos.services.database
 
+import android.util.Log
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.firestore.ktx.firestore
 import com.google.firebase.ktx.Firebase
@@ -64,4 +65,39 @@ class FirebaseDatabaseService(
                 subcategories
             )
         }
+
+    override suspend fun updateSubcategoryQuantity(categoryId: String, locationId: String,subcategoryId: String, newQuantity: Int) {
+        val categoryRef = database.collection("inventory").document(categoryId)
+        val categorySnapshot = categoryRef.get().await()
+
+        if (categorySnapshot.exists()) {
+            val subcategoriesMap = categorySnapshot["subcategories"] as? Map<String, Any>
+            val subcategoryMap = subcategoriesMap?.get(subcategoryId) as? Map<String, Any>
+
+            if (subcategoryMap != null) {
+                val inventoryMap = subcategoryMap["inventory"] as? Map<String, Any>
+
+                if (inventoryMap != null && inventoryMap.containsKey(locationId)) {
+                    val updatedInventory = inventoryMap.toMutableMap()
+                    updatedInventory[locationId] = newQuantity
+
+                    val updatedSubcategoryMap = subcategoryMap.toMutableMap()
+                    updatedSubcategoryMap["inventory"] = updatedInventory
+
+                    val updatedSubcategoriesMap = subcategoriesMap.toMutableMap()
+                    updatedSubcategoriesMap[subcategoryId] = updatedSubcategoryMap
+
+                    categoryRef.update("subcategories", updatedSubcategoriesMap)
+                        .addOnSuccessListener {
+                            Log.d("SUCCESS","Actualización realizada correctamente")
+                        }
+                        .addOnFailureListener { e ->
+                            Log.d("ERROR","Ocurrió un error en la actualizaciòn")
+                        }
+                }
+            }
+        }
+    }
+
+
 }
