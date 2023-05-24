@@ -42,6 +42,7 @@ fun ShoppingCart(
         route = RootNavigationRoute.CartRoute.route,
         startDestination = ShoppingCartRoutes.Initial.route
     ) {
+
         composable(ShoppingCartRoutes.Initial.route) {
             CartItems(
                 navController = navController,
@@ -49,7 +50,6 @@ fun ShoppingCart(
             ) {
                 // Productos
                 products = shoppingCart.map { Product(it) }
-
                 // Go to user route
                 navController.navigate(ShoppingCartRoutes.UserRegister.route)
             }
@@ -94,7 +94,6 @@ fun ShoppingCart(
             ClientRegisterScreen(navController = navController) {
                 // Configurar el cliente
                 client = it
-
                 //Navegar a la ventana de venta
                 navController.navigate(ShoppingCartRoutes.Summary.route)
             }
