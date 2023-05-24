@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "605999326357",
+    "project_id": "roperosmd",
+    "storage_bucket": "roperosmd.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:605999326357:android:1d867a8293cc6eac69a79c",
+        "android_client_info": {
+          "package_name": "org.minutodedios.roperos"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "605999326357-3dq5ij1qmvbtfolmi7t2348864el6mn9.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDtZgIvvJjeF2pGMhzKPF8H5Fk0Fewe6t0"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "605999326357-3dq5ij1qmvbtfolmi7t2348864el6mn9.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
