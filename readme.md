@@ -1,4 +1,4 @@
-# Roperos Minuto de Dios
+# 👕 Roperos Minuto de Dios
 Aplicación móvil para Android (Kotlin) creada para apoyar los procesos del [Banco de ropa del Minuto de Dios](https://minutodedios.org/programa/banco-de-ropa)
 
 <img src="./docs/mockup.png" width="200px">
